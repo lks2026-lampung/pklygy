@@ -1,0 +1,473 @@
+/* ============================================================
+   princess.css — Inner Pages Theme
+   Pink · Feminine · Cute · Princess Vibes ✨
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;700;800&family=Dancing+Script:wght@600;700&display=swap');
+
+/* Override semua CSS variables */
+:root {
+  --bg:         #fff0f5;
+  --bg2:        #ffe4ef;
+  --bg3:        #ffd6e7;
+  --surface:    #ffffff;
+  --surface2:   #fff5f9;
+  --border:     #ffc0d8;
+  --border2:    #ffaacb;
+
+  --red:        #e91e8c;
+  --red2:       #ff4da6;
+  --red-glow:   rgba(233,30,140,0.15);
+  --blood:      #c2185b;
+  --green:      #26a69a;
+  --amber:      #ff8f00;
+  --cyan:       #ab47bc;
+  --purple:     #7b1fa2;
+
+  --text:       #4a1942;
+  --text-2:     #8d6b8a;
+  --text-3:     #c4a0c0;
+
+  --font-horror: 'Dancing Script', cursive;
+  --font-mono:   'Nunito', sans-serif;
+  --font-head:   'Playfair Display', serif;
+
+  --radius:    10px;
+  --radius-lg: 18px;
+  --shadow:    0 8px 32px rgba(233,30,140,0.12);
+}
+
+/* Override body */
+body {
+  background: linear-gradient(135deg, #fff0f5 0%, #fce4ec 50%, #f3e5f5 100%);
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+/* Remove scanlines & vignette on inner pages */
+body::before, body::after { display: none !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--red2); border-radius: 3px; }
+
+/* Floating hearts background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255,182,193,0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(221,160,221,0.3) 0%, transparent 50%),
+    radial-gradient(circle at 60% 30%, rgba(255,192,203,0.2) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+  display: block !important;
+}
+
+/* Sparkle drips replace blood drips */
+.drip-container { display: none !important; }
+
+/* ── Sidebar ──────────────────────────────────────────────── */
+.sidebar {
+  background: linear-gradient(180deg, #fff0f5, #fce4ec);
+  border-right: 2px solid var(--border);
+  box-shadow: 2px 0 20px rgba(233,30,140,0.08);
+}
+
+.sidebar-logo .logo-top {
+  font-family: 'Dancing Script', cursive;
+  font-size: 22px;
+  color: var(--red2);
+  text-shadow: 0 2px 8px rgba(233,30,140,0.3);
+  animation: none;
+}
+
+.sidebar-logo .logo-sub { color: var(--text-3); }
+
+.sidebar-user { border-bottom: 1px solid var(--border); }
+
+.avatar { border: 2px solid var(--red2); }
+
+.nav-item { color: var(--text-2); }
+.nav-item:hover { color: var(--text); background: rgba(255,77,166,0.08); border-left-color: var(--border2); }
+.nav-item.active {
+  color: var(--red2);
+  background: rgba(233,30,140,0.1);
+  border-left-color: var(--red2);
+  text-shadow: none;
+}
+
+.btn-logout { border-color: var(--border2); }
+.btn-logout:hover { border-color: var(--red2); color: var(--red2); }
+
+/* ── Page header ──────────────────────────────────────────── */
+.page-header h1 {
+  font-family: 'Dancing Script', cursive;
+  color: var(--red2);
+  text-shadow: 0 2px 12px rgba(233,30,140,0.25);
+  animation: none;
+  font-size: 36px;
+}
+
+.page-header .sub { color: var(--text-3); }
+
+/* ── Cards ────────────────────────────────────────────────── */
+.card {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px rgba(233,30,140,0.07);
+}
+
+.card-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 20px;
+  color: var(--red2);
+  text-shadow: none;
+}
+
+.card-title .dot {
+  background: var(--red2);
+  box-shadow: 0 0 6px var(--red2);
+  animation: pulse-pink 2s infinite;
+}
+
+@keyframes pulse-pink {
+  0%,100% { box-shadow: 0 0 4px var(--red2); }
+  50% { box-shadow: 0 0 12px var(--red2), 0 0 24px rgba(233,30,140,0.3); }
+}
+
+/* ── Stat Cards ───────────────────────────────────────────── */
+.stat-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px rgba(233,30,140,0.08);
+}
+
+.stat-card::before { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+.stat-card.red::before    { background: linear-gradient(90deg,#ff4da6,#ff80bf); box-shadow: none; }
+.stat-card.green::before  { background: linear-gradient(90deg,#26a69a,#80cbc4); }
+.stat-card.amber::before  { background: linear-gradient(90deg,#ff8f00,#ffc107); }
+.stat-card.purple::before { background: linear-gradient(90deg,#ab47bc,#ce93d8); }
+.stat-card.cyan::before   { background: linear-gradient(90deg,#7b1fa2,#ba68c8); }
+
+.stat-label { color: var(--text-3); }
+.stat-card.red    .stat-value { color: var(--red2); text-shadow: none; }
+.stat-card.green  .stat-value { color: #00897b; }
+.stat-card.amber  .stat-value { color: #f57c00; }
+.stat-card.purple .stat-value { color: #8e24aa; }
+.stat-card.cyan   .stat-value { color: #6a1b9a; }
+.stat-desc { color: var(--text-3); }
+
+/* ── Clock Card ───────────────────────────────────────────── */
+.clock-card {
+  background: linear-gradient(135deg, #fff0f5, #fce4ec);
+  border: 1.5px solid var(--border);
+  box-shadow: 0 8px 32px rgba(233,30,140,0.12);
+  animation: none;
+}
+
+.clock-card::after {
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,77,166,0.08), transparent 70%);
+}
+
+.clock-seg {
+  color: var(--red2);
+  text-shadow: 0 2px 20px rgba(233,30,140,0.4);
+  animation: none;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+}
+
+.clock-colon { color: #ffaacb; }
+.clock-date  { color: var(--text-3); font-family: 'Nunito', sans-serif; }
+
+/* ── Timer ────────────────────────────────────────────────── */
+.timer-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  box-shadow: 0 4px 20px rgba(233,30,140,0.08);
+}
+
+.timer-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 18px;
+  color: var(--red2);
+  text-shadow: none;
+}
+
+.timer-live-dot {
+  background: var(--red2);
+  box-shadow: 0 0 8px var(--red2);
+  animation: pulse-pink 1.5s infinite;
+}
+
+.timer-unit {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.timer-num {
+  color: var(--red2);
+  text-shadow: none;
+  animation: none;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+}
+
+.timer-label { color: var(--text-3); }
+
+.progress-track { background: var(--bg2); border-color: var(--border); }
+.progress-bar {
+  background: linear-gradient(90deg, #ff80bf, #ff4da6);
+  box-shadow: 0 0 8px rgba(233,30,140,0.3);
+}
+.progress-pct { color: var(--red2); }
+.progress-dates { color: var(--text-3); }
+
+/* ── Form ─────────────────────────────────────────────────── */
+.form-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  box-shadow: 0 4px 20px rgba(233,30,140,0.07);
+}
+
+.form-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 26px;
+  color: var(--red2);
+  text-shadow: none;
+}
+
+input[type="date"], input[type="number"], input[type="text"], textarea, select {
+  background: var(--bg2);
+  border-color: var(--border);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  border-radius: var(--radius);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--red2);
+  box-shadow: 0 0 0 3px rgba(233,30,140,0.1);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator { filter: none; opacity: 0.6; }
+
+label { color: var(--text-3); font-family: 'Nunito', sans-serif; }
+.char-info { color: var(--text-3); }
+
+/* ── Chips ────────────────────────────────────────────────── */
+.chip {
+  border-color: var(--border);
+  color: var(--text-2);
+  border-radius: 20px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.chip:hover { border-color: var(--red2); color: var(--text); }
+.chip.active {
+  background: rgba(233,30,140,0.1);
+  border-color: var(--red2);
+  color: var(--red2);
+  box-shadow: 0 0 8px rgba(233,30,140,0.15);
+}
+.chip.mood.active { background: rgba(255,143,0,0.1); border-color: var(--amber); color: var(--amber); }
+
+/* ── Buttons ──────────────────────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, #ff4da6, #e91e8c);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(233,30,140,0.3);
+  border-radius: var(--radius);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #ff80bf, #ff4da6);
+  box-shadow: 0 6px 24px rgba(233,30,140,0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  border-color: var(--border2);
+  color: var(--text-2);
+  border-radius: var(--radius);
+}
+
+.btn-secondary:hover { border-color: var(--red2); color: var(--red2); }
+
+.btn-icon { border-color: var(--border); border-radius: var(--radius); }
+.btn-edit:hover { border-color: var(--amber); }
+.btn-del:hover  { border-color: var(--red2); }
+
+.btn-logout:hover { border-color: var(--red2); color: var(--red2); }
+
+/* ── Table ────────────────────────────────────────────────── */
+.table-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.table-header { border-bottom: 1px solid var(--border); }
+
+th {
+  background: var(--bg2);
+  color: var(--red2);
+  border-bottom: 1px solid var(--border);
+  font-family: 'Nunito', sans-serif;
+}
+
+td {
+  color: var(--text-2);
+  border-bottom: 1px solid var(--bg2);
+  font-family: 'Nunito', sans-serif;
+}
+
+.entry-row:hover td { background: var(--bg2); color: var(--text); }
+.td-date  { color: var(--red2); }
+.td-hari  { color: #f57c00; }
+.td-ket   { color: var(--text-3); }
+
+.filter-select {
+  background: var(--bg2);
+  border-color: var(--border);
+  color: var(--text-2);
+  font-family: 'Nunito', sans-serif;
+  border-radius: var(--radius);
+}
+
+.empty-state { color: var(--text-3); }
+
+/* ── Badge ────────────────────────────────────────────────── */
+.badge-jaringan     { background: rgba(0,137,123,0.1); color:#00897b; border-color:rgba(0,137,123,0.3); }
+.badge-hardware     { background: rgba(245,124,0,0.1); color:#f57c00; border-color:rgba(245,124,0,0.3); }
+.badge-software     { background: rgba(106,27,154,0.1); color:#6a1b9a; border-color:rgba(106,27,154,0.3); }
+.badge-administrasi { background: rgba(233,30,140,0.1); color:var(--red2); border-color:rgba(233,30,140,0.3); }
+.badge-instalasi    { background: rgba(171,71,188,0.1); color:#ab47bc; border-color:rgba(171,71,188,0.3); }
+.badge-konfigurasi  { background: rgba(0,150,136,0.1); color:#009688; border-color:rgba(0,150,136,0.3); }
+.badge-lainnya      { background: rgba(195,160,190,0.15); color:var(--text-3); border-color:var(--border); }
+
+/* ── Quote ────────────────────────────────────────────────── */
+.quote-card {
+  background: linear-gradient(135deg, #fff0f5, #f8bbd9);
+  border: 1.5px solid var(--border);
+  border-left: 4px solid var(--red2);
+}
+
+.quote-text { font-family: 'Dancing Script', cursive; font-size: 18px; color: var(--text); }
+.quote-author { color: var(--text-3); }
+
+/* ── Toast ────────────────────────────────────────────────── */
+.toast {
+  background: #ffffff;
+  border-color: var(--border);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+.toast.success { border-color: #26a69a; }
+.toast.error   { border-color: var(--red2); }
+
+/* ── Semangat page ────────────────────────────────────────── */
+.semangat-hero {
+  background: linear-gradient(135deg, #fce4ec, #f8bbd9, #e1bee7);
+  border: 1.5px solid var(--border);
+}
+
+.semangat-hero::before {
+  background: radial-gradient(ellipse at 50% 50%, rgba(233,30,140,0.08), transparent 70%);
+}
+
+.semangat-hero h2 {
+  font-family: 'Dancing Script', cursive;
+  color: var(--red2);
+  text-shadow: 0 2px 12px rgba(233,30,140,0.25);
+  animation: none;
+}
+
+.motivasi-text { font-family: 'Dancing Script', cursive; font-size: 22px; color: var(--text); }
+
+.milestone { background: #ffffff; border-color: var(--border); }
+.milestone.done { border-color: #26a69a; background: rgba(38,166,154,0.05); }
+.milestone.current { border-color: var(--red2); background: rgba(233,30,140,0.05); animation: pulse-pink 2s infinite; }
+
+.countdown-finish {
+  background: linear-gradient(135deg, #fff8e1, #fff3e0);
+  border: 1.5px solid #ffd54f;
+  border-left: 4px solid #ff8f00;
+}
+
+.countdown-finish .info h3 { font-family: 'Dancing Script', cursive; color: #f57c00; }
+.countdown-finish .days-left { color: #f57c00; text-shadow: none; font-family: 'Dancing Script', cursive; }
+
+/* ── Settings page ────────────────────────────────────────── */
+.settings-section { background: #ffffff; border: 1.5px solid var(--border); }
+.settings-title { font-family: 'Dancing Script', cursive; font-size: 22px; color: var(--red2); }
+.profile-preview { background: var(--bg2); border-color: var(--border); }
+.profile-preview .info .name { font-family: 'Dancing Script', cursive; color: var(--red2); }
+.session-info { background: var(--bg2); border-color: var(--border); color: var(--text-2); }
+.session-info span { color: var(--red2); }
+.pw-strength { background: var(--bg2); }
+.danger-zone { border-color: #ffb3c6 !important; }
+
+/* ── Rekap bars ───────────────────────────────────────────── */
+.kat-track { background: var(--bg2); border-color: var(--border); }
+.kat-bar-label { color: var(--text-2); }
+
+/* ── User hero cards (semangat) ───────────────────────────── */
+.user-hero-card { background: #ffffff; border-color: var(--border); }
+.user-hero-name { font-family: 'Dancing Script', cursive; color: var(--red2); }
+.user-hero-count { color: #f57c00; font-family: 'Dancing Script', cursive; }
+.user-hero-stat { color: var(--text-3); }
+.user-hero-avatar { border-color: var(--red2); animation: pulse-pink 3s infinite; }
+
+/* ── Checklist ────────────────────────────────────────────── */
+.checklist-item { border-bottom-color: var(--bg2); color: var(--text-2); }
+
+/* ── Afirmasi ─────────────────────────────────────────────── */
+.afirmasi-card { background: #ffffff; border-color: var(--border); }
+.afirmasi-card:hover { border-color: var(--red2); box-shadow: 0 8px 24px rgba(233,30,140,0.12); }
+.afirmasi-text { font-family: 'Dancing Script', cursive; font-size: 17px; color: var(--text); }
+.afirmasi-sub { color: var(--text-3); }
+
+/* ── Motivasi card ────────────────────────────────────────── */
+.motivasi-card { background: #ffffff; border-color: var(--border); }
+.motivasi-card:hover { border-color: var(--red2); box-shadow: 0 8px 20px rgba(233,30,140,0.1); }
+.motivasi-sub { color: var(--text-3); }
+
+/* ── Milestone grid ───────────────────────────────────────── */
+.milestone-label { color: var(--text-2); font-family: 'Nunito', sans-serif; }
+.milestone-date  { color: var(--text-3); }
+
+/* ── Spin result ──────────────────────────────────────────── */
+.spin-btn { background: #ffffff; border-color: var(--border); }
+.spin-btn h3 { font-family: 'Dancing Script', cursive; color: var(--red2); }
+.spin-btn p { color: var(--text-3); }
+.spin-result { background: var(--bg2); border-color: var(--border); color: var(--text); font-family: 'Dancing Script', cursive; font-size: 18px; }
+
+/* ── Hamburger ────────────────────────────────────────────── */
+.hamburger { background: #ffffff; border-color: var(--border); color: var(--text); }
+.sidebar-overlay { background: rgba(233,30,140,0.2); }
+
+/* ── Sparkles decoration ──────────────────────────────────── */
+@keyframes sparkle {
+  0%,100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 0.7; }
+}
+
+/* Add ✨ to page headers */
+.page-header h1::after {
+  content: " ✨";
+  font-size: 0.7em;
+  animation: sparkle 2s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* ── Responsive override ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar { background: linear-gradient(180deg, #fff0f5, #fce4ec); }
+}
