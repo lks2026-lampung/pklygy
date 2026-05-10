@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rekap — PKL Journal</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="drip-container" id="drips"></div>
+<div class="page-wrapper">
+  <div id="sidebar-mount"></div>
+  <main class="main">
+
+    <div class="page-header">
+      <h1>🩸 Rekap & Statistik</h1>
+      <div class="sub">Ringkasan perjalanan PKL di Sentra Computer</div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-text" id="quote-text">—</div>
+      <div class="quote-author" id="quote-author"></div>
+    </div>
+
+    <div class="stats-grid" style="margin-bottom:20px;">
+      <div class="stat-card red"><div class="stat-label">Total Entri</div><div class="stat-value" id="r-total">—</div><div class="stat-desc">jurnal tercatat</div></div>
+      <div class="stat-card amber"><div class="stat-label">Hari Diisi</div><div class="stat-value" id="r-hari">—</div><div class="stat-desc">dari ~108 hari</div></div>
+      <div class="stat-card green"><div class="stat-label">Kehadiran</div><div class="stat-value" id="r-pct">—</div><div class="stat-desc">persen hari terisi</div></div>
+      <div class="stat-card purple"><div class="stat-label">Mood Favorit</div><div class="stat-value" id="r-mood" style="font-size:32px;">—</div><div class="stat-desc" id="r-mood-label">—</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title"><span class="dot"></span> Progress Kehadiran</div>
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-label">Target: 108 hari kerja</span>
+          <span class="progress-pct" id="r-prog-pct">0%</span>
+        </div>
+        <div class="progress-track" style="height:10px;"><div class="progress-bar" id="r-prog-bar"></div></div>
+        <div class="progress-dates"><span>4 Mei 2026</span><span>25 September 2026</span></div>
+      </div>
+    </div>
+
+    <div class="rekap-grid">
+      <div class="card"><div class="card-title"><span class="dot"></span> Distribusi Kategori</div><div id="kat-chart"></div></div>
+      <div class="card"><div class="card-title"><span class="dot" style="background:var(--amber);box-shadow:0 0 6px var(--amber);"></span> Distribusi Mood</div><div id="mood-chart"></div></div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title"><span class="dot" style="background:var(--green);box-shadow:0 0 6px var(--green);"></span> Entri per Bulan</div>
+      <div id="monthly-chart"></div>
+    </div>
+
+    <div class="table-card" style="margin-top:20px;">
+      <div class="table-header"><div class="card-title" style="margin-bottom:0;"><span class="dot"></span> Ringkasan Bulanan</div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Bulan</th><th>Jumlah Entri</th><th>Hari Unik</th><th>Kategori Terbanyak</th><th>Progress</th></tr></thead>
+          <tbody id="monthly-tbody"><tr><td colspan="5" class="empty-state"><div class="empty-icon">🩸</div>Belum ada data</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/journal.js"></script>
+<script src="js/streak.js"></script>
+<script src="js/absensi.js"></script>
+<script src="js/nav.js"></script>
+<script>
+(function(){const c=document.getElementById("drips");for(let i=0;i<6;i++){const d=document.createElement("div");d.className="drip";d.style.cssText=`left:${Math.random()*100}%;animation-delay:${Math.random()*6}s;animation-duration:${2+Math.random()*4}s;height:${15+Math.random()*40}px;opacity:${0.15+Math.random()*0.3}`;c.appendChild(d);}})();
+
+const MONTH_NAMES={"2026-05":"Mei 2026","2026-06":"Juni 2026","2026-07":"Juli 2026","2026-08":"Agustus 2026","2026-09":"September 2026"};
+const MONTH_KEYS=Object.keys(MONTH_NAMES);
+const TARGET=108;
+const KAT_COLORS={Jaringan:"var(--cyan)",Hardware:"var(--amber)",Software:"var(--green)",Administrasi:"var(--red2)",Instalasi:"#aa44ff",Konfigurasi:"#44aacc",Lainnya:"var(--text-3)"};
+const MOOD_LABELS={produktif:"🔥 Produktif",seru:"⚡ Seru",belajar:"🧠 Belajar",biasa:"😐 Biasa",lelah:"😴 Lelah"};
+const MOOD_COLORS={produktif:"var(--amber)",seru:"var(--cyan)",belajar:"var(--green)",biasa:"var(--text-3)",lelah:"var(--purple)"};
+
+const user=requireSession();
+initPage("rekap");
+
+const q=getRandomQuote();
+document.getElementById("quote-text").textContent=`"${q.text}"`;
+document.getElementById("quote-author").textContent=q.author;
+
+journalRef(user.uid).once("value",snap=>{
+  const all=[];
+  snap.forEach(c=>all.push({key:c.key,...c.val()}));
+
+  const totalEntri=all.length;
+  const uniqueDays=new Set(all.map(e=>e.tanggal)).size;
+  const pct=Math.min(Math.round(uniqueDays/TARGET*100),100);
+
+  document.getElementById("r-total").textContent=totalEntri;
+  document.getElementById("r-hari").textContent=uniqueDays;
+  document.getElementById("r-pct").textContent=pct+"%";
+  setTimeout(()=>{document.getElementById("r-prog-bar").style.width=pct+"%";document.getElementById("r-prog-pct").textContent=pct+"%";},200);
+
+  const moodCount={};
+  all.forEach(e=>{if(e.mood) moodCount[e.mood]=(moodCount[e.mood]||0)+1;});
+  const topMood=Object.entries(moodCount).sort((a,b)=>b[1]-a[1])[0];
+  if(topMood){
+    const emoji={produktif:"🔥",seru:"⚡",belajar:"🧠",biasa:"😐",lelah:"😴"};
+    document.getElementById("r-mood").textContent=emoji[topMood[0]]||"❓";
+    document.getElementById("r-mood-label").textContent=(MOOD_LABELS[topMood[0]]||topMood[0])+" ("+topMood[1]+"x)";
+  }
+
+  const katCount={};
+  all.forEach(e=>{if(e.kategori) katCount[e.kategori]=(katCount[e.kategori]||0)+1;});
+  const katSorted=Object.entries(katCount).sort((a,b)=>b[1]-a[1]);
+  const maxKat=katSorted[0]?.[1]||1;
+  document.getElementById("kat-chart").innerHTML=katSorted.length
+    ?katSorted.map(([k,n])=>`<div class="kat-bar-wrap"><div class="kat-bar-label"><span>${k}</span><span>${n} entri</span></div><div class="kat-track"><div class="kat-fill" style="width:0%;background:${KAT_COLORS[k]||'var(--text-3)'};" data-w="${Math.round(n/maxKat*100)}"></div></div></div>`).join("")
+    :`<div class="empty-state"><div class="empty-icon">📊</div>Belum ada data</div>`;
+
+  const moodSorted=Object.entries(moodCount).sort((a,b)=>b[1]-a[1]);
+  const maxMood=moodSorted[0]?.[1]||1;
+  document.getElementById("mood-chart").innerHTML=moodSorted.length
+    ?moodSorted.map(([k,n])=>`<div class="kat-bar-wrap"><div class="kat-bar-label"><span>${MOOD_LABELS[k]||k}</span><span>${n}x</span></div><div class="kat-track"><div class="kat-fill" style="width:0%;background:${MOOD_COLORS[k]||'var(--text-3)'};" data-w="${Math.round(n/maxMood*100)}"></div></div></div>`).join("")
+    :`<div class="empty-state"><div class="empty-icon">😐</div>Belum ada data</div>`;
+
+  const monthly={};
+  MONTH_KEYS.forEach(m=>monthly[m]={entri:0,days:new Set(),kat:{}});
+  all.forEach(e=>{const m=(e.tanggal||"").slice(0,7);if(monthly[m]){monthly[m].entri++;monthly[m].days.add(e.tanggal);if(e.kategori)monthly[m].kat[e.kategori]=(monthly[m].kat[e.kategori]||0)+1;}});
+
+  const maxEntri=Math.max(...MONTH_KEYS.map(m=>monthly[m].entri),1);
+  document.getElementById("monthly-chart").innerHTML=`<div style="display:flex;align-items:flex-end;gap:10px;height:110px;padding:0 4px;">${MONTH_KEYS.map(m=>{const h=Math.round(monthly[m].entri/maxEntri*100);return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><span style="font-size:10px;color:var(--red2);">${monthly[m].entri}</span><div style="width:100%;height:${h}px;min-height:3px;background:linear-gradient(180deg,var(--red2),var(--blood));border-radius:3px 3px 0 0;transition:height .8s;"></div><span style="font-size:9px;color:var(--text-3);text-align:center;">${MONTH_NAMES[m].split(" ")[0]}</span></div>`;}).join("")}</div>`;
+
+  document.getElementById("monthly-tbody").innerHTML=MONTH_KEYS.map(m=>{
+    const d=monthly[m];
+    const topK=Object.entries(d.kat).sort((a,b)=>b[1]-a[1])[0];
+    const topKat=topK?topK[0]:"—";
+    const pctM=Math.min(Math.round(d.days.size/22*100),100);
+    return`<tr><td style="color:var(--text);">${MONTH_NAMES[m]}</td><td style="text-align:center;color:var(--red2);">${d.entri}</td><td style="text-align:center;color:var(--amber);">${d.days.size}</td><td><span class="badge badge-${topKat.toLowerCase()}">${topKat}</span></td><td><div style="display:flex;align-items:center;gap:7px;"><div class="kat-track" style="flex:1;"><div class="kat-fill" style="width:${pctM}%;background:var(--green);"></div></div><span style="font-size:10px;color:var(--text-3);width:28px;">${pctM}%</span></div></td></tr>`;
+  }).join("");
+
+  setTimeout(()=>document.querySelectorAll(".kat-fill[data-w]").forEach(el=>el.style.width=el.dataset.w+"%"),300);
+});
+</script>
+<script src="js/autodown.js"></script>
+</body>
+</html>

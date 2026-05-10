@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dinding Semangat — PKL Journal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .afirmasi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:20px;}
+    .afirmasi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;text-align:center;transition:all .3s;cursor:default;}
+    .afirmasi-card:hover{border-color:var(--blood);transform:translateY(-2px);box-shadow:0 8px 24px rgba(204,0,0,.1);}
+    .afirmasi-icon{font-size:30px;margin-bottom:10px;animation:float 3s ease-in-out infinite;}
+    .afirmasi-card:nth-child(2) .afirmasi-icon{animation-delay:.5s;}
+    .afirmasi-card:nth-child(3) .afirmasi-icon{animation-delay:1s;}
+    .afirmasi-card:nth-child(4) .afirmasi-icon{animation-delay:1.5s;}
+    .afirmasi-text{font-family:var(--font-horror);font-size:15px;color:var(--text);line-height:1.5;}
+    .afirmasi-sub{font-size:10px;color:var(--text-3);margin-top:6px;}
+
+    .user-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px;}
+    .user-hero-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;text-align:center;transition:all .3s;}
+    .user-hero-card:hover{border-color:var(--blood);}
+    .user-hero-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:800;font-size:20px;color:#fff;margin:0 auto 12px;border:3px solid var(--blood);animation:pulse-red 3s infinite;}
+    .user-hero-name{font-family:var(--font-horror);font-size:20px;color:var(--red2);margin-bottom:4px;}
+    .user-hero-stat{font-size:11px;color:var(--text-3);}
+    .user-hero-count{font-family:var(--font-horror);font-size:32px;color:var(--amber);line-height:1;}
+
+    .checklist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;}
+    .checklist-title{font-family:var(--font-horror);font-size:20px;color:var(--red2);margin-bottom:16px;}
+    .checklist-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text-2);}
+    .checklist-item:last-child{border-bottom:none;}
+    .checklist-item .ck-icon{font-size:18px;flex-shrink:0;}
+    .checklist-item .ck-done{color:var(--green);}
+    .checklist-item .ck-pending{color:var(--text-3);}
+
+    .spin-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;text-align:center;margin-bottom:20px;}
+    .spin-btn h3{font-family:var(--font-horror);font-size:20px;color:var(--red2);margin-bottom:8px;}
+    .spin-btn p{color:var(--text-3);font-size:11px;margin-bottom:16px;}
+    .spin-result{font-family:var(--font-horror);font-size:18px;color:var(--text);line-height:1.5;min-height:60px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+  </style>
+</head>
+<body>
+<div class="drip-container" id="drips"></div>
+<div class="page-wrapper">
+  <div id="sidebar-mount"></div>
+  <main class="main">
+
+    <div class="page-header">
+      <h1>✨ Dinding Semangat</h1>
+      <div class="sub">Karena PKL butuh lebih dari sekedar keahlian — butuh semangat!</div>
+    </div>
+
+    <!-- HERO MOTIVASI -->
+    <div class="semangat-hero" style="margin-bottom:20px;">
+      <h2 id="hero-motivasi">Loading...</h2>
+      <p style="color:var(--text-3);font-size:11px;margin-top:8px;">Klik untuk motivasi baru ↓</p>
+    </div>
+
+    <!-- COUNTDOWN SELESAI PKL -->
+    <div class="countdown-finish" style="margin-bottom:20px;">
+      <div class="icon">🏁</div>
+      <div class="info">
+        <h3>Selesai PKL dalam</h3>
+        <p>25 September 2026 · Sentra Computer</p>
+      </div>
+      <div style="text-align:center;margin-left:auto;">
+        <div class="days-left" id="days-finish">—</div>
+        <div class="days-label">hari lagi</div>
+      </div>
+    </div>
+
+    <!-- MILESTONE PROGRESS -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title"><span class="dot"></span> Milestone PKL</div>
+      <div class="milestone-grid" id="milestone-grid"></div>
+    </div>
+
+    <!-- USER HERO CARDS -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title"><span class="dot"></span> Pahlawan PKL</div>
+      <div class="user-cards" id="user-cards"></div>
+    </div>
+
+    <!-- AFIRMASI CARDS -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title"><span class="dot" style="background:var(--amber);box-shadow:0 0 6px var(--amber);"></span> Afirmasi Harian</div>
+      <div class="afirmasi-grid">
+        <div class="afirmasi-card">
+          <div class="afirmasi-icon">💪</div>
+          <div class="afirmasi-text">Aku mampu menyelesaikan PKL ini dengan baik</div>
+          <div class="afirmasi-sub">Repeat 3x setiap pagi</div>
+        </div>
+        <div class="afirmasi-card">
+          <div class="afirmasi-icon">🧠</div>
+          <div class="afirmasi-text">Setiap hari aku belajar sesuatu yang baru</div>
+          <div class="afirmasi-sub">Percaya pada prosesnya</div>
+        </div>
+        <div class="afirmasi-card">
+          <div class="afirmasi-icon">🔥</div>
+          <div class="afirmasi-text">Kesulitan hari ini adalah kekuatan masa depanku</div>
+          <div class="afirmasi-sub">Stay strong!</div>
+        </div>
+        <div class="afirmasi-card">
+          <div class="afirmasi-icon">⭐</div>
+          <div class="afirmasi-text">Aku layak ada di Sentra Computer</div>
+          <div class="afirmasi-sub">Kamu dipilih karena kamu bisa</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPIN MOTIVASI -->
+    <div class="spin-btn">
+      <h3>🎲 Motivasi Acak</h3>
+      <p>Butuh dorongan? Klik tombol di bawah!</p>
+      <div class="spin-result" id="spin-result">Klik tombol untuk mendapat motivasi...</div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="spinMotivasi()">🎲 Putar Motivasi!</button>
+    </div>
+
+    <!-- TIPS PKL -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title"><span class="dot" style="background:var(--cyan);box-shadow:0 0 6px var(--cyan);"></span> Tips Sukses PKL</div>
+      <div class="checklist-item"><span class="ck-icon">⚡</span><span>Isi jurnal setiap hari, jangan numpuk di akhir minggu</span></div>
+      <div class="checklist-item"><span class="ck-icon">🤝</span><span>Aktif bertanya ke pembimbing lapangan — itu kesempatan emas</span></div>
+      <div class="checklist-item"><span class="ck-icon">📸</span><span>Dokumentasikan setiap pekerjaan — foto, screenshot, catat</span></div>
+      <div class="checklist-item"><span class="ck-icon">🕐</span><span>Datang tepat waktu, pulang sesuai jadwal — konsistensi itu penting</span></div>
+      <div class="checklist-item"><span class="ck-icon">💡</span><span>Inisiatif melakukan tugas tanpa diminta — nilai plus di mata pembimbing</span></div>
+      <div class="checklist-item"><span class="ck-icon">🔧</span><span>Praktekkan skill networking/OS yang sudah dipelajari di sekolah</span></div>
+      <div class="checklist-item"><span class="ck-icon">😊</span><span>Jaga attitude — profesional, sopan, dan semangat setiap hari</span></div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/journal.js"></script>
+<script src="js/streak.js"></script>
+<script src="js/absensi.js"></script>
+<script src="js/nav.js"></script>
+<script>
+(function(){const c=document.getElementById("drips");for(let i=0;i<6;i++){const d=document.createElement("div");d.className="drip";d.style.cssText=`left:${Math.random()*100}%;animation-delay:${Math.random()*6}s;animation-duration:${2+Math.random()*4}s;height:${15+Math.random()*40}px;opacity:${0.15+Math.random()*0.3}`;c.appendChild(d);}})();
+
+const user = requireSession();
+initPage("semangat");
+
+// Hero motivasi
+const heroEl = document.getElementById("hero-motivasi");
+heroEl.textContent = getRandomMotivasi();
+heroEl.style.cursor = "pointer";
+heroEl.onclick = () => { heroEl.textContent = getRandomMotivasi(); };
+
+// Countdown selesai PKL
+function updateCountdown() {
+  const finish = new Date("2026-09-25T17:00:00+07:00");
+  const now    = new Date();
+  const diff   = finish - now;
+  if (diff <= 0) { document.getElementById("days-finish").textContent = "0"; return; }
+  document.getElementById("days-finish").textContent = Math.ceil(diff / 86400000);
+}
+updateCountdown();
+setInterval(updateCountdown, 60000);
+
+// Milestones
+const PKL_START = new Date("2026-05-04T10:00:00+07:00");
+const milestones = [
+  { label:"Minggu pertama", date:"2026-05-11", icon:"🌱" },
+  { label:"1 Bulan PKL",    date:"2026-06-04", icon:"📅" },
+  { label:"Setengah Jalan", date:"2026-07-16", icon:"⚡" },
+  { label:"2 Bulan PKL",    date:"2026-07-04", icon:"🔥" },
+  { label:"3 Bulan PKL",    date:"2026-08-04", icon:"💪" },
+  { label:"Akhir PKL",      date:"2026-09-25", icon:"🏁" },
+];
+const now = new Date();
+document.getElementById("milestone-grid").innerHTML = milestones.map(m => {
+  const mDate = new Date(m.date);
+  const done  = now >= mDate;
+  const isCur = !done && (mDate - now) < 7*86400000;
+  return `<div class="milestone ${done?"done":isCur?"current":""}">
+    <div class="milestone-icon">${m.icon}</div>
+    <div class="milestone-label">${done?"✅ ":isCur?"⚡ ":""}${m.label}</div>
+    <div class="milestone-date">${m.date}</div>
+  </div>`;
+}).join("");
+
+// User hero cards
+const USERS_INFO = [
+  { uid:"user_shandy",  name:"Shandy",  color:"#7a0000", avatar:"S" },
+  { uid:"user_sabrina", name:"Sabrina", color:"#4a0040", avatar:"Sa" },
+  { uid:"user_fahri",   name:"Fahri",   color:"#003a5a", avatar:"F" },
+];
+
+const cardsEl = document.getElementById("user-cards");
+USERS_INFO.forEach(u => {
+  journalRef(u.uid).once("value", snap => {
+    const total = snap.numChildren();
+    const days  = new Set();
+    snap.forEach(c => { if(c.val().tanggal) days.add(c.val().tanggal); });
+    const card = document.createElement("div");
+    card.className = "user-hero-card";
+    card.innerHTML = `
+      <div class="user-hero-avatar" style="background:${u.color};">${u.avatar}</div>
+      <div class="user-hero-name">${u.name}</div>
+      <div class="user-hero-count">${total}</div>
+      <div class="user-hero-stat">${days.size} hari · ${total} entri</div>`;
+    cardsEl.appendChild(card);
+  });
+});
+
+// Spin motivasi
+function spinMotivasi() {
+  const el = document.getElementById("spin-result");
+  el.style.opacity = "0";
+  setTimeout(() => {
+    el.textContent = getRandomMotivasi();
+    el.style.opacity = "1";
+    el.style.transition = "opacity .3s";
+  }, 200);
+}
+</script>
+<script src="js/autodown.js"></script>
+</body>
+</html>

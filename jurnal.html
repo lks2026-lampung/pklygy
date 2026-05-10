@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jurnal Harian — PKL Journal</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="drip-container" id="drips"></div>
+<div class="page-wrapper">
+  <div id="sidebar-mount"></div>
+  <main class="main">
+
+    <div id="guest-banner" style="display:none;background:rgba(0,170,255,.08);border:1.5px solid rgba(0,170,255,.3);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--neon);display:flex;align-items:center;gap:8px;">👁 Kamu login sebagai tamu. Kamu hanya bisa melihat data, tidak bisa menginput.</div>
+    <div class="page-header">
+      <h1>📓 Jurnal Harian</h1>
+      <div class="sub">Catat kegiatan PKL kamu — setiap hari, tanpa kecuali</div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-card" id="jurnal-form">
+      <div class="form-title" id="form-title">💗 Tambah Kegiatan</div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Tanggal</label>
+          <input type="date" id="f-tanggal" onchange="onTanggalChange()">
+        </div>
+        <div class="form-group">
+          <label>Hari ke- <span style="color:var(--text-3);font-size:8px;">(otomatis)</span></label>
+          <input type="number" id="f-hariKe" min="1" placeholder="auto">
+        </div>
+
+        <div class="form-group full">
+          <label>Kategori</label>
+          <div class="chip-group" id="kat-chips">
+            <span class="chip" data-value="Jaringan"     onclick="toggleChip(this,'kat-chips')">🌐 Jaringan</span>
+            <span class="chip" data-value="Hardware"     onclick="toggleChip(this,'kat-chips')">🖥 Hardware</span>
+            <span class="chip" data-value="Software"     onclick="toggleChip(this,'kat-chips')">💾 Software</span>
+            <span class="chip" data-value="Administrasi" onclick="toggleChip(this,'kat-chips')">📋 Administrasi</span>
+            <span class="chip" data-value="Instalasi"    onclick="toggleChip(this,'kat-chips')">⚙️ Instalasi</span>
+            <span class="chip" data-value="Konfigurasi"  onclick="toggleChip(this,'kat-chips')">🔧 Konfigurasi</span>
+            <span class="chip" data-value="Lainnya"      onclick="toggleChip(this,'kat-chips')">📌 Lainnya</span>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <div class="char-wrap">
+            <label>Kegiatan <span style="color:var(--red);">*</span></label>
+            <span class="char-info"><span id="char-count">0</span>/300</span>
+          </div>
+          <textarea id="f-kegiatan" maxlength="300" rows="3"
+            placeholder="Contoh: Konfigurasi BIND9 DNS server dan pengujian resolusi domain lokal..."
+            oninput="updateCharCount()"></textarea>
+        </div>
+
+        <div class="form-group full">
+          <label>Keterangan <span style="color:var(--text-3);font-size:8px;">(opsional)</span></label>
+          <textarea id="f-keterangan" rows="2" placeholder="Catatan tambahan, kendala, atau hasil..."></textarea>
+        </div>
+
+        <div class="form-group full">
+          <label>Mood Hari Ini</label>
+          <div class="chip-group" id="mood-chips">
+            <span class="chip mood" data-value="produktif" onclick="toggleChip(this,'mood-chips')">🔥 Produktif</span>
+            <span class="chip mood" data-value="seru"      onclick="toggleChip(this,'mood-chips')">⚡ Seru</span>
+            <span class="chip mood" data-value="belajar"   onclick="toggleChip(this,'mood-chips')">🧠 Belajar</span>
+            <span class="chip mood" data-value="biasa"     onclick="toggleChip(this,'mood-chips')">😐 Biasa</span>
+            <span class="chip mood" data-value="lelah"     onclick="toggleChip(this,'mood-chips')">😴 Lelah</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions" style="margin-top:18px;">
+        <button class="btn btn-primary" id="btn-submit" onclick="handleSubmit()">Simpan Jurnal</button>
+        <button class="btn btn-secondary" id="btn-cancel-edit" style="display:none;" onclick="cancelEdit()">Batal Edit</button>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="card-title" style="margin-bottom:0;"><span class="dot"></span> Log — <span id="tbl-name">—</span></div>
+        <div class="table-filters">
+          <select class="filter-select" id="filter-month" onchange="applyFilters()">
+            <option value="">Semua Bulan</option>
+            <option value="2026-05">Mei 2026</option>
+            <option value="2026-06">Juni 2026</option>
+            <option value="2026-07">Juli 2026</option>
+            <option value="2026-08">Agustus 2026</option>
+            <option value="2026-09">September 2026</option>
+          </select>
+          <select class="filter-select" id="filter-kat" onchange="applyFilters()">
+            <option value="">Semua Kategori</option>
+            <option>Jaringan</option><option>Hardware</option><option>Software</option>
+            <option>Administrasi</option><option>Instalasi</option><option>Konfigurasi</option><option>Lainnya</option>
+          </select>
+          <button class="btn btn-secondary" style="padding:5px 12px;font-size:10px;" onclick="window.print()">🖨 Print</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Tanggal</th><th>Hari ke-</th><th>Nama</th><th>Kategori</th><th>Kegiatan</th><th>Keterangan</th><th>Mood</th><th>Aksi</th></tr></thead>
+          <tbody id="journal-tbody">
+            <tr><td colspan="8" class="empty-state"><div class="empty-icon">📜</div>Belum ada entri. Yuk mulai isi!</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/clock.js"></script>
+<script src="js/journal.js"></script>
+<script src="js/streak.js"></script>
+<script src="js/absensi.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/telegram.js"></script>
+<script>
+(function(){const c=document.getElementById("drips");for(let i=0;i<6;i++){const d=document.createElement("div");d.className="drip";d.style.cssText=`left:${Math.random()*100}%;animation-delay:${Math.random()*6}s;animation-duration:${2+Math.random()*4}s;height:${15+Math.random()*40}px;opacity:${0.15+Math.random()*0.3}`;c.appendChild(d);}})();
+
+const user = requireSession();
+initPage("jurnal");
+document.getElementById("tbl-name").textContent = user.display;
+
+// Default date today
+const today = new Date().toISOString().slice(0,10);
+document.getElementById("f-tanggal").value = today;
+onTanggalChange();
+
+// Load
+loadAndRender();
+
+function loadAndRender() {
+  const month = document.getElementById("filter-month").value;
+  const kat   = document.getElementById("filter-kat").value;
+  loadEntries(user.uid, month, kat, entries => {
+    const tbody = document.getElementById("journal-tbody");
+    if (!entries.length) {
+      tbody.innerHTML = `<tr><td colspan="9" class="empty-state"><div class="empty-icon">📜</div>Tidak ada entri ditemukan.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = entries.map((e,i) => buildEntryRow(e,i+1,user.uid)).join("");
+  });
+}
+
+window.applyFilters = loadAndRender;
+
+function onTanggalChange() {
+  const val = document.getElementById("f-tanggal").value;
+  if (!val) return;
+  document.getElementById("f-hariKe").value = getHariKe(val)||"";
+}
+
+function toggleChip(el, groupId) {
+  document.querySelectorAll(`#${groupId} .chip`).forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+}
+
+async function handleSubmit() {
+  const tanggal    = document.getElementById("f-tanggal").value;
+  const hariKe     = document.getElementById("f-hariKe").value;
+  const kegiatan   = document.getElementById("f-kegiatan").value.trim();
+  const keterangan = document.getElementById("f-keterangan").value.trim();
+  const kategori   = getChip("kat-chips");
+  const mood       = getChip("mood-chips");
+
+  if (!tanggal || !kegiatan) { showToast("Tanggal & Kegiatan wajib diisi!", "error"); return; }
+
+  const btn = document.getElementById("btn-submit");
+  btn.disabled = true; btn.textContent = "Menyimpan...";
+
+  try {
+    const isNew = !editingKey;
+    await saveEntry(user.uid, { tanggal, hariKe: parseInt(hariKe)||"", kegiatan, keterangan, kategori: kategori||"Lainnya", mood: mood||"biasa", userName: user.display, uid: user.uid });
+    if (isNew) notifyJournal(user.display, { tanggal, hariKe, kegiatan, keterangan, kategori: kategori||"Lainnya", mood: mood||"biasa" });
+    showToast(isNew ? "Jurnal berhasil disimpan! ✔" : "Entri diperbarui ✔", "success");
+    document.getElementById("jurnal-form").reset();
+    updateCharCount();
+    document.getElementById("f-tanggal").value = new Date().toISOString().slice(0,10);
+    onTanggalChange();
+    cancelEdit();
+  } catch(e) {
+    showToast("Gagal menyimpan: " + e.message, "error");
+  } finally {
+    btn.disabled = false;
+    document.getElementById("btn-submit").textContent = "Simpan Jurnal";
+  }
+}
+</script>
+<style>
+@media print {
+  .sidebar,.hamburger,.form-card,.table-filters,.btn-icon,.td-actions,.drip-container,.sidebar-overlay{display:none!important;}
+  .main{margin:0;padding:16px;}
+  body::before,body::after{display:none;}
+  :root{--bg:#fff;--surface:#fff;--text:#000;--text-2:#333;--border:#ccc;--bg2:#f5f5f5;}
+}
+</style>
+<script src="js/autodown.js"></script>
+</body>
+</html>
