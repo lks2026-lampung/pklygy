@@ -2,25 +2,34 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Jurnal Harian — PKL Journal</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="drip-container" id="drips"></div>
-<div class="page-wrapper">
+<div class="app">
   <div id="sidebar-mount"></div>
   <main class="main">
 
-    <div id="guest-banner" style="display:none;background:rgba(0,170,255,.08);border:1.5px solid rgba(0,170,255,.3);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--neon);display:flex;align-items:center;gap:8px;">👁 Kamu login sebagai tamu. Kamu hanya bisa melihat data, tidak bisa menginput.</div>
-    <div class="page-header">
-      <h1>📓 Jurnal Harian</h1>
-      <div class="sub">Catat kegiatan PKL kamu — setiap hari, tanpa kecuali</div>
+    <div class="page-head">
+      <h1>📓 Jurnal <span class="accent">Harian</span></h1>
+      <div class="ph-sub">Catat setiap kegiatan PKL — setiap hari tanpa kecuali</div>
     </div>
 
-    <!-- FORM -->
-    <div class="form-card" id="jurnal-form">
-      <div class="form-title" id="form-title">💗 Tambah Kegiatan</div>
+    <!-- Guest banner -->
+    <div class="guest-banner" id="guest-banner" style="display:none;">
+      👁 Kamu masuk sebagai tamu. Hanya bisa melihat data jurnal, tidak bisa menginput.
+    </div>
+
+    <!-- KOMENTAR NOTIF -->
+    <div id="comment-notif" style="display:none;"></div>
+
+    <!-- FORM INPUT -->
+    <div class="card" id="jurnal-form" style="margin-bottom:14px;">
+      <div class="card-head">
+        <div class="card-title"><span class="ct-icon">✏️</span> <span id="form-title">Tambah Kegiatan</span></div>
+        <button class="btn btn-outline btn-sm" id="btn-cancel-edit" style="display:none;" onclick="cancelEdit()">Batal Edit</button>
+      </div>
 
       <div class="form-grid">
         <div class="form-group">
@@ -28,13 +37,12 @@
           <input type="date" id="f-tanggal" onchange="onTanggalChange()">
         </div>
         <div class="form-group">
-          <label>Hari ke- <span style="color:var(--text-3);font-size:8px;">(otomatis)</span></label>
+          <label>Hari ke- <span class="label-hint">(otomatis)</span></label>
           <input type="number" id="f-hariKe" min="1" placeholder="auto">
         </div>
-
-        <div class="form-group full">
+        <div class="form-group form-full">
           <label>Kategori</label>
-          <div class="chip-group" id="kat-chips">
+          <div class="chips" id="kat-chips">
             <span class="chip" data-value="Jaringan"     onclick="toggleChip(this,'kat-chips')">🌐 Jaringan</span>
             <span class="chip" data-value="Hardware"     onclick="toggleChip(this,'kat-chips')">🖥 Hardware</span>
             <span class="chip" data-value="Software"     onclick="toggleChip(this,'kat-chips')">💾 Software</span>
@@ -44,25 +52,19 @@
             <span class="chip" data-value="Lainnya"      onclick="toggleChip(this,'kat-chips')">📌 Lainnya</span>
           </div>
         </div>
-
-        <div class="form-group full">
-          <div class="char-wrap">
-            <label>Kegiatan <span style="color:var(--red);">*</span></label>
-            <span class="char-info"><span id="char-count">0</span>/300</span>
-          </div>
+        <div class="form-group form-full">
+          <label>Kegiatan <span style="color:var(--red)">*</span> <span class="char-counter"><span id="char-count">0</span>/300</span></label>
           <textarea id="f-kegiatan" maxlength="300" rows="3"
             placeholder="Contoh: Konfigurasi BIND9 DNS server dan pengujian resolusi domain lokal..."
             oninput="updateCharCount()"></textarea>
         </div>
-
-        <div class="form-group full">
-          <label>Keterangan <span style="color:var(--text-3);font-size:8px;">(opsional)</span></label>
+        <div class="form-group form-full">
+          <label>Keterangan <span class="label-hint">(opsional)</span></label>
           <textarea id="f-keterangan" rows="2" placeholder="Catatan tambahan, kendala, atau hasil..."></textarea>
         </div>
-
-        <div class="form-group full">
+        <div class="form-group form-full">
           <label>Mood Hari Ini</label>
-          <div class="chip-group" id="mood-chips">
+          <div class="chips" id="mood-chips">
             <span class="chip mood" data-value="produktif" onclick="toggleChip(this,'mood-chips')">🔥 Produktif</span>
             <span class="chip mood" data-value="seru"      onclick="toggleChip(this,'mood-chips')">⚡ Seru</span>
             <span class="chip mood" data-value="belajar"   onclick="toggleChip(this,'mood-chips')">🧠 Belajar</span>
@@ -72,17 +74,16 @@
         </div>
       </div>
 
-      <div class="form-actions" style="margin-top:18px;">
+      <div class="form-actions" style="margin-top:16px;">
         <button class="btn btn-primary" id="btn-submit" onclick="handleSubmit()">Simpan Jurnal</button>
-        <button class="btn btn-secondary" id="btn-cancel-edit" style="display:none;" onclick="cancelEdit()">Batal Edit</button>
       </div>
     </div>
 
-    <!-- TABLE -->
-    <div class="table-card">
-      <div class="table-header">
-        <div class="card-title" style="margin-bottom:0;"><span class="dot"></span> Log — <span id="tbl-name">—</span></div>
-        <div class="table-filters">
+    <!-- FILTER + TABLE -->
+    <div class="card">
+      <div class="card-head" style="flex-wrap:wrap;gap:10px;">
+        <div class="card-title"><span class="ct-icon">📋</span> Log Jurnal — <span id="tbl-user">Semua</span></div>
+        <div class="filter-bar" style="margin-bottom:0;">
           <select class="filter-select" id="filter-month" onchange="applyFilters()">
             <option value="">Semua Bulan</option>
             <option value="2026-05">Mei 2026</option>
@@ -96,20 +97,48 @@
             <option>Jaringan</option><option>Hardware</option><option>Software</option>
             <option>Administrasi</option><option>Instalasi</option><option>Konfigurasi</option><option>Lainnya</option>
           </select>
-          <button class="btn btn-secondary" style="padding:5px 12px;font-size:10px;" onclick="window.print()">🖨 Print</button>
+          <select class="filter-select" id="filter-user" onchange="applyFilters()">
+            <option value="">Semua User</option>
+            <option value="Shandy">Shandy</option>
+            <option value="Sabrina">Sabrina</option>
+            <option value="Fahri">Fahri</option>
+          </select>
+          <button class="btn btn-outline btn-sm" onclick="window.print()">🖨 Print</button>
         </div>
       </div>
-      <div class="table-wrap">
+      <div class="tbl-wrap">
         <table>
-          <thead><tr><th>#</th><th>Tanggal</th><th>Hari ke-</th><th>Nama</th><th>Kategori</th><th>Kegiatan</th><th>Keterangan</th><th>Mood</th><th>Aksi</th></tr></thead>
+          <thead>
+            <tr>
+              <th>#</th><th>Tanggal</th><th>Hari ke-</th><th>Nama</th>
+              <th>Kategori</th><th>Kegiatan</th><th>Keterangan</th><th>Mood</th><th>Aksi</th>
+            </tr>
+          </thead>
           <tbody id="journal-tbody">
-            <tr><td colspan="8" class="empty-state"><div class="empty-icon">📜</div>Belum ada entri. Yuk mulai isi!</td></tr>
+            <tr><td colspan="9" class="empty"><div class="empty-icon">📓</div>Belum ada entri</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
   </main>
+</div>
+
+<!-- Comment modal -->
+<div class="modal-bg" id="comment-modal">
+  <div class="modal">
+    <div class="modal-title">💬 Komentar</div>
+    <div id="comment-list" style="max-height:200px;overflow-y:auto;margin-bottom:14px;"></div>
+    <div class="form-group">
+      <label>Tulis Komentar</label>
+      <input type="text" id="comment-input" placeholder="Komentar kamu..." maxlength="150"
+             onkeydown="if(event.key==='Enter')submitComment()">
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitComment()">Kirim</button>
+      <button class="btn btn-outline" onclick="closeCommentModal()">Tutup</button>
+    </div>
+  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -119,39 +148,64 @@
 <script src="js/auth.js"></script>
 <script src="js/clock.js"></script>
 <script src="js/journal.js"></script>
-<script src="js/streak.js"></script>
-<script src="js/absensi.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/telegram.js"></script>
+<script src="js/autodown.js"></script>
 <script>
-(function(){const c=document.getElementById("drips");for(let i=0;i<6;i++){const d=document.createElement("div");d.className="drip";d.style.cssText=`left:${Math.random()*100}%;animation-delay:${Math.random()*6}s;animation-duration:${2+Math.random()*4}s;height:${15+Math.random()*40}px;opacity:${0.15+Math.random()*0.3}`;c.appendChild(d);}})();
-
 const user = requireSession();
 initPage("jurnal");
-document.getElementById("tbl-name").textContent = user.display;
 
-// Default date today
+// Guest mode
+if (user.isGuest) {
+  document.getElementById("jurnal-form").style.display = "none";
+  document.getElementById("guest-banner").style.display = "flex";
+}
+
+document.getElementById("tbl-user").textContent = user.isGuest ? "Semua" : user.display;
 const today = new Date().toISOString().slice(0,10);
 document.getElementById("f-tanggal").value = today;
 onTanggalChange();
 
-// Load
 loadAndRender();
 
 function loadAndRender() {
-  const month = document.getElementById("filter-month").value;
-  const kat   = document.getElementById("filter-kat").value;
+  const month   = document.getElementById("filter-month").value;
+  const kat     = document.getElementById("filter-kat").value;
+  const filterU = document.getElementById("filter-user").value;
   loadEntries(user.uid, month, kat, entries => {
-    const tbody = document.getElementById("journal-tbody");
-    if (!entries.length) {
-      tbody.innerHTML = `<tr><td colspan="9" class="empty-state"><div class="empty-icon">📜</div>Tidak ada entri ditemukan.</td></tr>`;
-      return;
-    }
-    tbody.innerHTML = entries.map((e,i) => buildEntryRow(e,i+1,user.uid)).join("");
+    // Filter by user name if selected
+    const filtered = filterU ? entries.filter(e => e.userName === filterU) : entries;
+    renderTable(filtered);
   });
 }
 
 window.applyFilters = loadAndRender;
+
+function renderTable(entries) {
+  const tbody = document.getElementById("journal-tbody");
+  if (!entries.length) {
+    tbody.innerHTML = `<tr><td colspan="9" class="empty"><div class="empty-icon">📓</div>Tidak ada entri ditemukan</td></tr>`;
+    return;
+  }
+  const MOOD = { produktif:"🔥", biasa:"😐", lelah:"😴", seru:"⚡", belajar:"🧠" };
+  tbody.innerHTML = entries.map((e,i) => `
+    <tr>
+      <td class="td-num">${i+1}</td>
+      <td class="td-date">${e.tanggal||"—"}</td>
+      <td style="text-align:center;color:var(--red);font-family:var(--mono);">${e.hariKe||"—"}</td>
+      <td class="td-name">${escHtml(e.userName||"—")}</td>
+      <td><span class="badge badge-${(e.kategori||"lainnya").toLowerCase()}">${e.kategori||"—"}</span></td>
+      <td style="max-width:240px;">${escHtml(e.kegiatan||"")}</td>
+      <td style="max-width:150px;font-size:11px;color:var(--text-3);">${escHtml(e.keterangan||"—")}</td>
+      <td style="text-align:center;">${MOOD[e.mood]||"❓"}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn-icon" onclick="openCommentModal('${e.key}')" title="Komentar">💬</button>
+        ${!user.isGuest && e.uid===user.uid ? `
+        <button class="btn-icon" onclick="startEdit('${e.key}')" title="Edit">✏️</button>
+        <button class="btn-icon danger" onclick="confirmDelete('${e.key}')" title="Hapus">🗑</button>` : ""}
+      </td>
+    </tr>`).join("");
+}
 
 function onTanggalChange() {
   const val = document.getElementById("f-tanggal").value;
@@ -160,8 +214,12 @@ function onTanggalChange() {
 }
 
 function toggleChip(el, groupId) {
-  document.querySelectorAll(`#${groupId} .chip`).forEach(c => c.classList.remove("active"));
-  el.classList.add("active");
+  document.querySelectorAll(`#${groupId} .chip`).forEach(c => c.classList.remove("on"));
+  el.classList.add("on");
+}
+
+function updateCharCount() {
+  document.getElementById("char-count").textContent = (document.getElementById("f-kegiatan").value||"").length;
 }
 
 async function handleSubmit() {
@@ -171,38 +229,80 @@ async function handleSubmit() {
   const keterangan = document.getElementById("f-keterangan").value.trim();
   const kategori   = getChip("kat-chips");
   const mood       = getChip("mood-chips");
-
   if (!tanggal || !kegiatan) { showToast("Tanggal & Kegiatan wajib diisi!", "error"); return; }
 
   const btn = document.getElementById("btn-submit");
-  btn.disabled = true; btn.textContent = "Menyimpan...";
+  btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> Menyimpan...`;
 
   try {
     const isNew = !editingKey;
-    await saveEntry(user.uid, { tanggal, hariKe: parseInt(hariKe)||"", kegiatan, keterangan, kategori: kategori||"Lainnya", mood: mood||"biasa", userName: user.display, uid: user.uid });
-    if (isNew) notifyJournal(user.display, { tanggal, hariKe, kegiatan, keterangan, kategori: kategori||"Lainnya", mood: mood||"biasa" });
-    showToast(isNew ? "Jurnal berhasil disimpan! ✔" : "Entri diperbarui ✔", "success");
-    document.getElementById("jurnal-form").reset();
+    await saveEntry(user.uid, {
+      tanggal, hariKe: parseInt(hariKe)||"",
+      kegiatan, keterangan,
+      kategori: kategori||"Lainnya",
+      mood: mood||"biasa",
+      userName: user.display,
+      uid: user.uid
+    });
+    if (isNew) notifyJournal(user.display, { tanggal, hariKe, kegiatan, keterangan, kategori:kategori||"Lainnya", mood:mood||"biasa" });
+    showToast(isNew ? "Jurnal berhasil disimpan! ✓" : "Entri diperbarui! ✓", "success");
+    if (isNew) launchConfetti(30);
+    document.getElementById("f-kegiatan").value = "";
+    document.getElementById("f-keterangan").value = "";
     updateCharCount();
     document.getElementById("f-tanggal").value = new Date().toISOString().slice(0,10);
     onTanggalChange();
     cancelEdit();
   } catch(e) {
-    showToast("Gagal menyimpan: " + e.message, "error");
+    showToast("Gagal menyimpan: "+e.message, "error");
   } finally {
-    btn.disabled = false;
-    document.getElementById("btn-submit").textContent = "Simpan Jurnal";
+    btn.disabled = false; btn.textContent = "Simpan Jurnal";
   }
+}
+
+// Comment modal
+let currentCommentKey = null;
+function openCommentModal(key) {
+  currentCommentKey = key;
+  document.getElementById("comment-modal").classList.add("open");
+  document.getElementById("comment-input").value = "";
+  loadComments(key);
+}
+function closeCommentModal() {
+  document.getElementById("comment-modal").classList.remove("open");
+  currentCommentKey = null;
+}
+function loadComments(key) {
+  db.ref(`comments/${key}`).on("value", snap => {
+    const el = document.getElementById("comment-list");
+    const comments = [];
+    snap.forEach(c => comments.push({ key:c.key, ...c.val() }));
+    el.innerHTML = comments.length
+      ? comments.map(c => `
+          <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+            <div style="font-size:11px;font-weight:700;color:var(--red);">${escHtml(c.name)} <span style="font-size:10px;color:var(--text-3);font-weight:400;">${new Date(c.ts).toLocaleString("id-ID",{hour:"2-digit",minute:"2-digit",day:"numeric",month:"short"})}</span></div>
+            <div style="font-size:12px;color:var(--text-2);margin-top:3px;">${escHtml(c.text)}</div>
+          </div>`).join("")
+      : `<div style="font-size:12px;color:var(--text-3);text-align:center;padding:16px;">Belum ada komentar</div>`;
+    el.scrollTop = el.scrollHeight;
+  });
+}
+async function submitComment() {
+  if (!currentCommentKey) return;
+  const input = document.getElementById("comment-input");
+  const text  = input.value.trim();
+  if (!text) return;
+  await db.ref(`comments/${currentCommentKey}`).push({
+    name: user.display, uid: user.uid, text, ts: Date.now()
+  });
+  input.value = "";
 }
 </script>
 <style>
 @media print {
-  .sidebar,.hamburger,.form-card,.table-filters,.btn-icon,.td-actions,.drip-container,.sidebar-overlay{display:none!important;}
-  .main{margin:0;padding:16px;}
-  body::before,body::after{display:none;}
-  :root{--bg:#fff;--surface:#fff;--text:#000;--text-2:#333;--border:#ccc;--bg2:#f5f5f5;}
+  .sidebar,.topbar,.bottom-nav,#jurnal-form,.filter-bar,.btn-icon,.shoutbox,.shoutbox-fab,.toast-container{display:none!important;}
+  .main{margin:0;padding:12px;}
 }
 </style>
-<script src="js/autodown.js"></script>
 </body>
 </html>

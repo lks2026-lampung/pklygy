@@ -2,61 +2,93 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Rekap — PKL Journal</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="drip-container" id="drips"></div>
-<div class="page-wrapper">
+<div class="app">
   <div id="sidebar-mount"></div>
   <main class="main">
 
-    <div class="page-header">
-      <h1>🩸 Rekap & Statistik</h1>
-      <div class="sub">Ringkasan perjalanan PKL di Sentra Computer</div>
+    <div class="page-head">
+      <h1>📊 Rekap <span class="accent">&amp; Statistik</span></h1>
+      <div class="ph-sub">Ringkasan perjalanan PKL di Sentra Computer</div>
     </div>
 
-    <div class="quote-card">
+    <div class="quote-card" style="margin-bottom:14px;">
       <div class="quote-text" id="quote-text">—</div>
       <div class="quote-author" id="quote-author"></div>
     </div>
 
-    <div class="stats-grid" style="margin-bottom:20px;">
-      <div class="stat-card red"><div class="stat-label">Total Entri</div><div class="stat-value" id="r-total">—</div><div class="stat-desc">jurnal tercatat</div></div>
-      <div class="stat-card amber"><div class="stat-label">Hari Diisi</div><div class="stat-value" id="r-hari">—</div><div class="stat-desc">dari ~108 hari</div></div>
-      <div class="stat-card green"><div class="stat-label">Kehadiran</div><div class="stat-value" id="r-pct">—</div><div class="stat-desc">persen hari terisi</div></div>
-      <div class="stat-card purple"><div class="stat-label">Mood Favorit</div><div class="stat-value" id="r-mood" style="font-size:32px;">—</div><div class="stat-desc" id="r-mood-label">—</div></div>
+    <!-- OVERVIEW STATS -->
+    <div class="grid-4" style="margin-bottom:14px;">
+      <div class="stat-card sc-red"><div class="sc-icon">📓</div><div class="sc-label">Total Entri</div><div class="sc-value" id="r-total">—</div><div class="sc-desc">jurnal tercatat</div></div>
+      <div class="stat-card sc-amber"><div class="sc-icon">📅</div><div class="sc-label">Hari Diisi</div><div class="sc-value" id="r-hari">—</div><div class="sc-desc">dari ~108 hari</div></div>
+      <div class="stat-card sc-green"><div class="sc-icon">✅</div><div class="sc-label">Kehadiran</div><div class="sc-value" id="r-pct">—</div><div class="sc-desc">persen hari terisi</div></div>
+      <div class="stat-card sc-black"><div class="sc-icon">😊</div><div class="sc-label">Mood Favorit</div><div class="sc-value" id="r-mood" style="font-size:28px;padding-top:4px;">—</div><div class="sc-desc" id="r-mood-label">—</div></div>
     </div>
 
-    <div class="card" style="margin-bottom:20px;">
-      <div class="card-title"><span class="dot"></span> Progress Kehadiran</div>
-      <div class="progress-wrap">
-        <div class="progress-header">
-          <span class="progress-label">Target: 108 hari kerja</span>
-          <span class="progress-pct" id="r-prog-pct">0%</span>
+    <!-- PROGRESS -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">📈</span> Progress Kehadiran PKL</div>
+      <div class="prog-wrap">
+        <div class="prog-head">
+          <span class="prog-label">Target: 108 hari kerja</span>
+          <span class="prog-pct" id="r-prog-pct">0%</span>
         </div>
-        <div class="progress-track" style="height:10px;"><div class="progress-bar" id="r-prog-bar"></div></div>
-        <div class="progress-dates"><span>4 Mei 2026</span><span>25 September 2026</span></div>
+        <div class="prog-track" style="height:10px;"><div class="prog-bar" id="r-prog-bar"></div></div>
+        <div class="prog-dates"><span>4 Mei 2026</span><span>25 September 2026</span></div>
       </div>
     </div>
 
-    <div class="rekap-grid">
-      <div class="card"><div class="card-title"><span class="dot"></span> Distribusi Kategori</div><div id="kat-chart"></div></div>
-      <div class="card"><div class="card-title"><span class="dot" style="background:var(--amber);box-shadow:0 0 6px var(--amber);"></span> Distribusi Mood</div><div id="mood-chart"></div></div>
+    <!-- REKAP PER USER -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:14px;"><span class="ct-icon">👥</span> Rekap per User</div>
+      <div id="user-rekap"></div>
     </div>
 
-    <div class="card" style="margin-top:20px;">
-      <div class="card-title"><span class="dot" style="background:var(--green);box-shadow:0 0 6px var(--green);"></span> Entri per Bulan</div>
-      <div id="monthly-chart"></div>
+    <!-- CHARTS -->
+    <div class="grid-2" style="margin-bottom:14px;">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">🗂</span> Distribusi Kategori</div>
+        <div id="kat-chart"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">😊</span> Distribusi Mood</div>
+        <div id="mood-chart"></div>
+      </div>
     </div>
 
-    <div class="table-card" style="margin-top:20px;">
-      <div class="table-header"><div class="card-title" style="margin-bottom:0;"><span class="dot"></span> Ringkasan Bulanan</div></div>
-      <div class="table-wrap">
+    <!-- MONTHLY BAR CHART -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">📅</span> Entri per Bulan</div>
+      <div id="monthly-chart" style="padding:4px 0;"></div>
+    </div>
+
+    <!-- WORD CLOUD -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head">
+        <div class="card-title"><span class="ct-icon">☁️</span> Word Cloud Jurnal</div>
+        <select class="filter-select" id="wc-user" onchange="loadWordCloud()">
+          <option value="">Semua</option>
+          <option value="Shandy">Shandy</option>
+          <option value="Sabrina">Sabrina</option>
+          <option value="Fahri">Fahri</option>
+        </select>
+      </div>
+      <div class="word-cloud" id="word-cloud">
+        <div style="font-size:12px;color:var(--text-3);">Memuat...</div>
+      </div>
+    </div>
+
+    <!-- MONTHLY TABLE -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">📋</span> Ringkasan Bulanan</div>
+      <div class="tbl-wrap">
         <table>
-          <thead><tr><th>Bulan</th><th>Jumlah Entri</th><th>Hari Unik</th><th>Kategori Terbanyak</th><th>Progress</th></tr></thead>
-          <tbody id="monthly-tbody"><tr><td colspan="5" class="empty-state"><div class="empty-icon">🩸</div>Belum ada data</td></tr></tbody>
+          <thead><tr><th>Bulan</th><th>Entri</th><th>Hari Unik</th><th>Kategori Terbanyak</th><th>Progress</th></tr></thead>
+          <tbody id="monthly-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -70,80 +102,177 @@
 <script src="js/firebase.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/journal.js"></script>
-<script src="js/streak.js"></script>
-<script src="js/absensi.js"></script>
 <script src="js/nav.js"></script>
+<script src="js/autodown.js"></script>
 <script>
-(function(){const c=document.getElementById("drips");for(let i=0;i<6;i++){const d=document.createElement("div");d.className="drip";d.style.cssText=`left:${Math.random()*100}%;animation-delay:${Math.random()*6}s;animation-duration:${2+Math.random()*4}s;height:${15+Math.random()*40}px;opacity:${0.15+Math.random()*0.3}`;c.appendChild(d);}})();
-
-const MONTH_NAMES={"2026-05":"Mei 2026","2026-06":"Juni 2026","2026-07":"Juli 2026","2026-08":"Agustus 2026","2026-09":"September 2026"};
-const MONTH_KEYS=Object.keys(MONTH_NAMES);
-const TARGET=108;
-const KAT_COLORS={Jaringan:"var(--cyan)",Hardware:"var(--amber)",Software:"var(--green)",Administrasi:"var(--red2)",Instalasi:"#aa44ff",Konfigurasi:"#44aacc",Lainnya:"var(--text-3)"};
-const MOOD_LABELS={produktif:"🔥 Produktif",seru:"⚡ Seru",belajar:"🧠 Belajar",biasa:"😐 Biasa",lelah:"😴 Lelah"};
-const MOOD_COLORS={produktif:"var(--amber)",seru:"var(--cyan)",belajar:"var(--green)",biasa:"var(--text-3)",lelah:"var(--purple)"};
-
-const user=requireSession();
+const user = requireSession();
 initPage("rekap");
 
-const q=getRandomQuote();
-document.getElementById("quote-text").textContent=`"${q.text}"`;
-document.getElementById("quote-author").textContent=q.author;
+const MONTH_NAMES = {"2026-05":"Mei","2026-06":"Juni","2026-07":"Juli","2026-08":"Agustus","2026-09":"September"};
+const MONTH_KEYS  = Object.keys(MONTH_NAMES);
+const TARGET      = 108;
+const USERS_LIST  = [
+  { uid:"user_shandy",  name:"Shandy",  color:"#dc2626" },
+  { uid:"user_sabrina", name:"Sabrina", color:"#b91c1c" },
+  { uid:"user_fahri",   name:"Fahri",   color:"#991b1b" },
+];
+const KAT_COLORS  = { Jaringan:"#0891b2", Hardware:"#d97706", Software:"#16a34a", Administrasi:"#dc2626", Instalasi:"#7c3aed", Konfigurasi:"#1d4ed8", Lainnya:"#9ca3af" };
+const MOOD_LABELS = { produktif:"🔥 Produktif", seru:"⚡ Seru", belajar:"🧠 Belajar", biasa:"😐 Biasa", lelah:"😴 Lelah" };
+const MOOD_COLORS = { produktif:"#dc2626", seru:"#d97706", belajar:"#16a34a", biasa:"#9ca3af", lelah:"#7c3aed" };
 
-journalRef(user.uid).once("value",snap=>{
-  const all=[];
-  snap.forEach(c=>all.push({key:c.key,...c.val()}));
+const q = getRandomQuote();
+document.getElementById("quote-text").textContent  = `"${q.text}"`;
+document.getElementById("quote-author").textContent = q.author;
 
-  const totalEntri=all.length;
-  const uniqueDays=new Set(all.map(e=>e.tanggal)).size;
-  const pct=Math.min(Math.round(uniqueDays/TARGET*100),100);
+journalRef().once("value", snap => {
+  const all = [];
+  snap.forEach(c => all.push({ key:c.key, ...c.val() }));
 
-  document.getElementById("r-total").textContent=totalEntri;
-  document.getElementById("r-hari").textContent=uniqueDays;
-  document.getElementById("r-pct").textContent=pct+"%";
-  setTimeout(()=>{document.getElementById("r-prog-bar").style.width=pct+"%";document.getElementById("r-prog-pct").textContent=pct+"%";},200);
+  const totalEntri = all.length;
+  const uniqueDays = new Set(all.map(e=>e.tanggal)).size;
+  const pct        = Math.min(Math.round(uniqueDays/TARGET*100),100);
 
-  const moodCount={};
-  all.forEach(e=>{if(e.mood) moodCount[e.mood]=(moodCount[e.mood]||0)+1;});
-  const topMood=Object.entries(moodCount).sort((a,b)=>b[1]-a[1])[0];
-  if(topMood){
-    const emoji={produktif:"🔥",seru:"⚡",belajar:"🧠",biasa:"😐",lelah:"😴"};
-    document.getElementById("r-mood").textContent=emoji[topMood[0]]||"❓";
-    document.getElementById("r-mood-label").textContent=(MOOD_LABELS[topMood[0]]||topMood[0])+" ("+topMood[1]+"x)";
+  document.getElementById("r-total").textContent = totalEntri;
+  document.getElementById("r-hari").textContent  = uniqueDays;
+  document.getElementById("r-pct").textContent   = pct+"%";
+  setTimeout(()=>{ document.getElementById("r-prog-bar").style.width=pct+"%"; document.getElementById("r-prog-pct").textContent=pct+"%"; },200);
+
+  // Mood fav
+  const moodCount = {};
+  all.forEach(e=>{ if(e.mood) moodCount[e.mood]=(moodCount[e.mood]||0)+1; });
+  const topMood = Object.entries(moodCount).sort((a,b)=>b[1]-a[1])[0];
+  if (topMood) {
+    const emojis = { produktif:"🔥", seru:"⚡", belajar:"🧠", biasa:"😐", lelah:"😴" };
+    document.getElementById("r-mood").textContent       = emojis[topMood[0]]||"❓";
+    document.getElementById("r-mood-label").textContent = (MOOD_LABELS[topMood[0]]||topMood[0])+" ("+topMood[1]+"x)";
   }
 
-  const katCount={};
-  all.forEach(e=>{if(e.kategori) katCount[e.kategori]=(katCount[e.kategori]||0)+1;});
-  const katSorted=Object.entries(katCount).sort((a,b)=>b[1]-a[1]);
-  const maxKat=katSorted[0]?.[1]||1;
-  document.getElementById("kat-chart").innerHTML=katSorted.length
-    ?katSorted.map(([k,n])=>`<div class="kat-bar-wrap"><div class="kat-bar-label"><span>${k}</span><span>${n} entri</span></div><div class="kat-track"><div class="kat-fill" style="width:0%;background:${KAT_COLORS[k]||'var(--text-3)'};" data-w="${Math.round(n/maxKat*100)}"></div></div></div>`).join("")
-    :`<div class="empty-state"><div class="empty-icon">📊</div>Belum ada data</div>`;
-
-  const moodSorted=Object.entries(moodCount).sort((a,b)=>b[1]-a[1]);
-  const maxMood=moodSorted[0]?.[1]||1;
-  document.getElementById("mood-chart").innerHTML=moodSorted.length
-    ?moodSorted.map(([k,n])=>`<div class="kat-bar-wrap"><div class="kat-bar-label"><span>${MOOD_LABELS[k]||k}</span><span>${n}x</span></div><div class="kat-track"><div class="kat-fill" style="width:0%;background:${MOOD_COLORS[k]||'var(--text-3)'};" data-w="${Math.round(n/maxMood*100)}"></div></div></div>`).join("")
-    :`<div class="empty-state"><div class="empty-icon">😐</div>Belum ada data</div>`;
-
-  const monthly={};
-  MONTH_KEYS.forEach(m=>monthly[m]={entri:0,days:new Set(),kat:{}});
-  all.forEach(e=>{const m=(e.tanggal||"").slice(0,7);if(monthly[m]){monthly[m].entri++;monthly[m].days.add(e.tanggal);if(e.kategori)monthly[m].kat[e.kategori]=(monthly[m].kat[e.kategori]||0)+1;}});
-
-  const maxEntri=Math.max(...MONTH_KEYS.map(m=>monthly[m].entri),1);
-  document.getElementById("monthly-chart").innerHTML=`<div style="display:flex;align-items:flex-end;gap:10px;height:110px;padding:0 4px;">${MONTH_KEYS.map(m=>{const h=Math.round(monthly[m].entri/maxEntri*100);return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;"><span style="font-size:10px;color:var(--red2);">${monthly[m].entri}</span><div style="width:100%;height:${h}px;min-height:3px;background:linear-gradient(180deg,var(--red2),var(--blood));border-radius:3px 3px 0 0;transition:height .8s;"></div><span style="font-size:9px;color:var(--text-3);text-align:center;">${MONTH_NAMES[m].split(" ")[0]}</span></div>`;}).join("")}</div>`;
-
-  document.getElementById("monthly-tbody").innerHTML=MONTH_KEYS.map(m=>{
-    const d=monthly[m];
-    const topK=Object.entries(d.kat).sort((a,b)=>b[1]-a[1])[0];
-    const topKat=topK?topK[0]:"—";
-    const pctM=Math.min(Math.round(d.days.size/22*100),100);
-    return`<tr><td style="color:var(--text);">${MONTH_NAMES[m]}</td><td style="text-align:center;color:var(--red2);">${d.entri}</td><td style="text-align:center;color:var(--amber);">${d.days.size}</td><td><span class="badge badge-${topKat.toLowerCase()}">${topKat}</span></td><td><div style="display:flex;align-items:center;gap:7px;"><div class="kat-track" style="flex:1;"><div class="kat-fill" style="width:${pctM}%;background:var(--green);"></div></div><span style="font-size:10px;color:var(--text-3);width:28px;">${pctM}%</span></div></td></tr>`;
+  // Per user rekap
+  const userStats = {};
+  USERS_LIST.forEach(u => userStats[u.uid]={ entries:0, days:new Set(), kat:{} });
+  all.forEach(e => {
+    if (userStats[e.uid]) {
+      userStats[e.uid].entries++;
+      if (e.tanggal) userStats[e.uid].days.add(e.tanggal);
+      if (e.kategori) userStats[e.uid].kat[e.kategori]=(userStats[e.uid].kat[e.kategori]||0)+1;
+    }
+  });
+  document.getElementById("user-rekap").innerHTML = USERS_LIST.map(u => {
+    const s   = userStats[u.uid];
+    const pU  = Math.min(Math.round(s.days.size/TARGET*100),100);
+    const topK= Object.entries(s.kat).sort((a,b)=>b[1]-a[1])[0];
+    return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);">
+      <div style="width:36px;height:36px;border-radius:10px;background:${u.color};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;flex-shrink:0;">${u.name[0]}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <span style="font-size:13px;font-weight:700;color:var(--text);">${u.name}</span>
+          <span style="font-size:11px;color:var(--red);font-weight:600;">${s.entries} entri · ${s.days.size} hari</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pU}%;background:${u.color};"></div></div>
+        <div style="font-size:10px;color:var(--text-3);margin-top:3px;">${pU}% dari target · Favorit: ${topK?topK[0]:"—"}</div>
+      </div>
+    </div>`;
   }).join("");
 
-  setTimeout(()=>document.querySelectorAll(".kat-fill[data-w]").forEach(el=>el.style.width=el.dataset.w+"%"),300);
+  // Kategori chart
+  const katCount = {};
+  all.forEach(e=>{ if(e.kategori) katCount[e.kategori]=(katCount[e.kategori]||0)+1; });
+  const katSorted = Object.entries(katCount).sort((a,b)=>b[1]-a[1]);
+  const maxKat = katSorted[0]?.[1]||1;
+  document.getElementById("kat-chart").innerHTML = katSorted.length
+    ? katSorted.map(([k,n])=>`
+      <div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;">
+          <span style="font-weight:600;">${k}</span><span style="color:var(--text-3);">${n}</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" data-w="${Math.round(n/maxKat*100)}" style="width:0%;background:${KAT_COLORS[k]||"#9ca3af"};"></div></div>
+      </div>`).join("")
+    : `<div class="empty"><div class="empty-icon">📊</div>Belum ada data</div>`;
+
+  // Mood chart
+  const moodSorted = Object.entries(moodCount).sort((a,b)=>b[1]-a[1]);
+  const maxMood = moodSorted[0]?.[1]||1;
+  document.getElementById("mood-chart").innerHTML = moodSorted.length
+    ? moodSorted.map(([k,n])=>`
+      <div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;">
+          <span style="font-weight:600;">${MOOD_LABELS[k]||k}</span><span style="color:var(--text-3);">${n}x</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" data-w="${Math.round(n/maxMood*100)}" style="width:0%;background:${MOOD_COLORS[k]||"#9ca3af"};"></div></div>
+      </div>`).join("")
+    : `<div class="empty"><div class="empty-icon">😐</div>Belum ada data</div>`;
+
+  // Monthly
+  const monthly = {};
+  MONTH_KEYS.forEach(m => monthly[m]={ entri:0, days:new Set(), kat:{} });
+  all.forEach(e => {
+    const m = (e.tanggal||"").slice(0,7);
+    if (monthly[m]) { monthly[m].entri++; monthly[m].days.add(e.tanggal); if(e.kategori) monthly[m].kat[e.kategori]=(monthly[m].kat[e.kategori]||0)+1; }
+  });
+
+  const maxM = Math.max(...MONTH_KEYS.map(m=>monthly[m].entri),1);
+  document.getElementById("monthly-chart").innerHTML = `
+    <div style="display:flex;align-items:flex-end;gap:8px;height:100px;padding:0 4px;">
+      ${MONTH_KEYS.map(m=>{
+        const h = Math.round(monthly[m].entri/maxM*100);
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <span style="font-size:10px;color:var(--red);font-weight:700;">${monthly[m].entri}</span>
+          <div style="width:100%;height:${Math.max(h,3)}px;background:var(--red);border-radius:4px 4px 0 0;"></div>
+          <span style="font-size:9px;color:var(--text-3);">${MONTH_NAMES[m]}</span>
+        </div>`;
+      }).join("")}
+    </div>`;
+
+  document.getElementById("monthly-tbody").innerHTML = MONTH_KEYS.map(m => {
+    const d    = monthly[m];
+    const topK = Object.entries(d.kat).sort((a,b)=>b[1]-a[1])[0];
+    const pM   = Math.min(Math.round(d.days.size/22*100),100);
+    return `<tr>
+      <td style="font-weight:600;">${MONTH_NAMES[m]} 2026</td>
+      <td style="color:var(--red);font-weight:700;">${d.entri}</td>
+      <td style="color:var(--amber);font-weight:700;">${d.days.size}</td>
+      <td>${topK?`<span class="badge badge-${topK[0].toLowerCase()}">${topK[0]}</span>`:"—"}</td>
+      <td style="min-width:100px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="bar-track" style="flex:1;"><div class="bar-fill" style="width:${pM}%;background:var(--green);"></div></div>
+          <span style="font-size:10px;color:var(--text-3);width:28px;">${pM}%</span>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+
+  setTimeout(()=>document.querySelectorAll(".bar-fill[data-w]").forEach(el=>el.style.width=el.dataset.w+"%"),300);
+
+  // Word cloud
+  loadWordCloud(all);
 });
+
+function loadWordCloud(allEntries) {
+  const filterUser = document.getElementById("wc-user").value;
+  journalRef().once("value", snap => {
+    const entries = [];
+    snap.forEach(c => { const d=c.val(); if(!filterUser||d.userName===filterUser) entries.push(d); });
+    buildWordCloud(entries);
+  });
+}
+
+function buildWordCloud(entries) {
+  const stopwords = new Set(["dan","yang","ke","di","dari","untuk","dengan","pada","ini","itu","serta","atau","juga","telah","sudah","akan","oleh","adalah","dalam","tidak","lebih","bisa","ada","nya","se","an","ter","ber","me","mem","per","pem","konfigurasi","instalasi","pengujian","melakukan","menggunakan","proses","sistem"]);
+  const freq = {};
+  entries.forEach(e => {
+    (e.kegiatan||"").toLowerCase().replace(/[^a-z0-9\s]/g,"").split(/\s+/).forEach(w => {
+      if (w.length > 3 && !stopwords.has(w)) freq[w]=(freq[w]||0)+1;
+    });
+  });
+  const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,30);
+  const max    = sorted[0]?.[1]||1;
+  const colors = ["#dc2626","#b91c1c","#991b1b","#d97706","#16a34a","#1d4ed8","#7c3aed"];
+  document.getElementById("word-cloud").innerHTML = sorted.length
+    ? sorted.map(([w,n])=>`
+        <span class="wc-word" style="font-size:${12+Math.round(n/max*20)}px;color:${colors[Math.floor(Math.random()*colors.length)]};">${w}</span>
+      `).join("")
+    : `<div style="font-size:12px;color:var(--text-3);">Belum ada data</div>`;
+}
 </script>
-<script src="js/autodown.js"></script>
 </body>
 </html>

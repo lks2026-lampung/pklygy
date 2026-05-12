@@ -2,81 +2,72 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>PKL Journal — Sentra Computer</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
 <div class="login-page">
-  <div class="login-box">
-    <div class="login-header">
-      <div class="login-logo">⟨ Sentra Computer · PKL 2026 ⟩</div>
-      <h1>PKL <span>Journal</span></h1>
-      <p>Sistem jurnal digital Praktik Kerja Lapangan</p>
+  <div class="login-wrap">
+    <div class="login-brand">
+      <div class="login-brand-icon">📓</div>
+      <h1>PKL Journal</h1>
+      <p>Sentra Computer · 2026</p>
     </div>
-
     <div class="login-card">
-      <!-- User select -->
-      <div class="user-select">
+      <div class="user-grid">
         <button class="user-btn" data-user="shandy" onclick="selectUser('shandy')">
-          <div class="avatar" style="background:linear-gradient(135deg,#0066ff,#00aaff);">S</div>
-          <span class="uname">Shandy</span>
+          <div class="ub-av" style="background:linear-gradient(135deg,#dc2626,#b91c1c);">S</div>
+          <span class="ub-name">Shandy</span>
         </button>
         <button class="user-btn" data-user="sabrina" onclick="selectUser('sabrina')">
-          <div class="avatar" style="background:linear-gradient(135deg,#6644ff,#00aaff);">Sa</div>
-          <span class="uname">Sabrina</span>
+          <div class="ub-av" style="background:linear-gradient(135deg,#b91c1c,#991b1b);">Sa</div>
+          <span class="ub-name">Sabrina</span>
         </button>
         <button class="user-btn" data-user="fahri" onclick="selectUser('fahri')">
-          <div class="avatar" style="background:linear-gradient(135deg,#0066ff,#6644ff);">F</div>
-          <span class="uname">Fahri</span>
+          <div class="ub-av" style="background:linear-gradient(135deg,#991b1b,#7f1d1d);">F</div>
+          <span class="ub-name">Fahri</span>
         </button>
       </div>
-
-      <div class="login-divider">MASUKKAN PASSWORD</div>
+      <div class="divider">MASUKKAN PASSWORD</div>
       <div id="login-error" class="login-error"></div>
-
-      <div class="form-group" style="margin-bottom:16px;">
+      <div class="form-group" style="margin-bottom:14px;">
         <label>Password</label>
-        <div class="password-wrap">
+        <div class="pw-wrap">
           <input type="password" id="password" placeholder="••••••••"
                  autocomplete="current-password"
                  onkeydown="if(event.key==='Enter')doLogin()">
-          <button class="toggle-pw" type="button" onclick="togglePw()">👁</button>
+          <button class="pw-toggle" type="button" onclick="togglePw()">👁</button>
         </div>
       </div>
-
-      <button class="btn btn-primary btn-login" onclick="doLogin()" id="btn-login">
+      <button class="btn btn-primary btn-full" onclick="doLogin()" id="btn-login">
         <span id="btn-text">Masuk</span>
-        <div class="spinner" id="login-spinner" style="display:none;"></div>
+        <span class="spinner" id="login-spinner" style="display:none;"></span>
       </button>
-
-      <!-- Guest login -->
-      <button class="guest-btn" onclick="showGuestModal()">
-        👁 Masuk sebagai Tamu
-      </button>
+      <button class="guest-btn" onclick="showGuestModal()">👁 Masuk sebagai Tamu</button>
     </div>
-
     <div class="login-footer">PKL 4 Mei — 25 September 2026 · Sentra Computer</div>
   </div>
 </div>
 
-<!-- Guest name modal -->
-<div class="modal-overlay" id="guest-modal">
-  <div class="modal-box">
+<!-- Guest modal -->
+<div class="modal-bg" id="guest-modal">
+  <div class="modal">
     <div class="modal-title">👁 Login Tamu</div>
-    <div class="modal-sub">Masukkan nama kamu untuk melanjutkan. Kamu hanya bisa melihat, tidak bisa menginput data.</div>
+    <div class="modal-sub">Masukkan nama kamu. Sebagai tamu kamu hanya bisa melihat jurnal, rekap, dan gallery — tidak bisa menginput data apapun.</div>
     <div class="form-group" style="margin-bottom:16px;">
       <label>Nama Kamu</label>
-      <input type="text" id="guest-name" placeholder="Contoh: Budi Santoso..." maxlength="30"
+      <input type="text" id="guest-name" placeholder="Nama lengkap kamu..." maxlength="30"
              onkeydown="if(event.key==='Enter')doGuestLogin()">
     </div>
     <div style="display:flex;gap:8px;">
-      <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="doGuestLogin()">Lanjut sebagai Tamu</button>
-      <button class="btn btn-secondary" onclick="closeGuestModal()">Batal</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="doGuestLogin()">Masuk sebagai Tamu</button>
+      <button class="btn btn-outline" onclick="closeGuestModal()">Batal</button>
     </div>
   </div>
 </div>
+
+<div class="toast-container" id="toast-container"></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -92,13 +83,13 @@ let selectedUser = null;
 
 function selectUser(u) {
   selectedUser = u;
-  document.querySelectorAll(".user-btn").forEach(b => b.classList.toggle("selected", b.dataset.user === u));
+  document.querySelectorAll(".user-btn").forEach(b => b.classList.toggle("sel", b.dataset.user===u));
   document.getElementById("password").focus();
 }
 
 function togglePw() {
   const pw = document.getElementById("password");
-  pw.type = pw.type === "password" ? "text" : "password";
+  pw.type = pw.type==="password" ? "text" : "password";
 }
 
 async function doLogin() {
@@ -107,15 +98,13 @@ async function doLogin() {
   const spinner = document.getElementById("login-spinner");
   errEl.style.display = "none";
 
-  if (!selectedUser) { errEl.textContent = "Pilih nama kamu dulu!"; errEl.style.display = "block"; return; }
+  if (!selectedUser) { errEl.textContent="Pilih nama kamu dulu!"; errEl.style.display="block"; return; }
   const pw = document.getElementById("password").value;
-  if (!pw) { errEl.textContent = "Password tidak boleh kosong."; errEl.style.display = "block"; return; }
+  if (!pw) { errEl.textContent="Password tidak boleh kosong."; errEl.style.display="block"; return; }
 
   btnText.style.display = "none";
-  spinner.style.display = "block";
+  spinner.style.display = "inline-block";
   document.getElementById("btn-login").disabled = true;
-
-  await new Promise(r => setTimeout(r, 400));
 
   try {
     const user = await loginUser(selectedUser, pw);
@@ -123,43 +112,41 @@ async function doLogin() {
     await notifyLogin(user.display);
     window.location.href = "dashboard.html";
   } catch(e) {
-    btnText.style.display = "inline";
-    spinner.style.display = "none";
+    btnText.style.display  = "inline";
+    spinner.style.display  = "none";
     document.getElementById("btn-login").disabled = false;
     errEl.textContent = e.message;
     errEl.style.display = "block";
   }
 }
 
-// Guest login
 function showGuestModal() {
-  document.getElementById("guest-modal").classList.add("show");
-  setTimeout(() => document.getElementById("guest-name").focus(), 100);
+  document.getElementById("guest-modal").classList.add("open");
+  setTimeout(()=>document.getElementById("guest-name").focus(), 100);
 }
 function closeGuestModal() {
-  document.getElementById("guest-modal").classList.remove("show");
+  document.getElementById("guest-modal").classList.remove("open");
 }
 
 async function doGuestLogin() {
   const name = document.getElementById("guest-name").value.trim();
-  if (!name) {
-    document.getElementById("guest-name").focus();
-    return;
-  }
-
-  // Set guest session
+  if (!name) { document.getElementById("guest-name").focus(); return; }
   sessionStorage.setItem("pkl_session", JSON.stringify({
-    username: "guest",
-    display:  name,
-    uid:      "guest_" + Date.now(),
-    color:    "#00aaff",
-    avatar:   name[0].toUpperCase(),
-    isGuest:  true
+    username:"guest", display:name,
+    uid:"guest_"+Date.now(),
+    color:"#dc2626", avatar:name[0].toUpperCase(), isGuest:true
   }));
-
-  // Notif telegram
   await notifyLogin(`[TAMU] ${name}`);
   window.location.href = "jurnal.html";
+}
+
+function showToast(msg, type="info") {
+  const c = document.getElementById("toast-container");
+  const el = document.createElement("div");
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  c.appendChild(el);
+  setTimeout(()=>el.remove(), 3000);
 }
 </script>
 </body>

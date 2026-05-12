@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Games — PKL Journal</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <div id="sidebar-mount"></div>
+  <main class="main">
+
+    <div class="page-head">
+      <h1>🎮 Games <span class="accent">PKL</span></h1>
+      <div class="ph-sub">Hiburan saat PKL biar tidak stress</div>
+    </div>
+
+    <!-- TAB NAVIGATION -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px;">
+      <button class="btn btn-primary btn-sm" onclick="showTab('quiz')"   id="tab-quiz">📚 Quiz Harian</button>
+      <button class="btn btn-outline btn-sm" onclick="showTab('bingo')"  id="tab-bingo">🎯 PKL Bingo</button>
+      <button class="btn btn-outline btn-sm" onclick="showTab('spin')"   id="tab-spin">🎡 Spin Wheel</button>
+      <button class="btn btn-outline btn-sm" onclick="showTab('nasib')"  id="tab-nasib">🔮 Nasib PKL</button>
+      <button class="btn btn-outline btn-sm" onclick="showTab('roast')"  id="tab-roast">😂 Roast Generator</button>
+      <button class="btn btn-outline btn-sm" onclick="showTab('siapa')"  id="tab-siapa">🏆 Siapa Paling...</button>
+    </div>
+
+    <!-- QUIZ TAB -->
+    <div id="pane-quiz">
+      <div class="quiz-card" style="margin-bottom:14px;">
+        <div class="quiz-meta" id="quiz-meta">Loading soal...</div>
+        <div class="quiz-q" id="quiz-q">—</div>
+        <div class="quiz-opts" id="quiz-opts"></div>
+        <div class="quiz-result" id="quiz-result"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-icon">🏆</span> Skor Hari Ini</div>
+        <div id="quiz-scoreboard" style="display:flex;gap:16px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div class="quiz-score"><div class="qs-num" id="quiz-correct">0</div></div>
+            <div style="font-size:11px;color:var(--text-3);">Benar</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:36px;font-weight:800;color:var(--text-3);" id="quiz-total">0</div>
+            <div style="font-size:11px;color:var(--text-3);">Total Soal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BINGO TAB -->
+    <div id="pane-bingo" style="display:none;">
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-head">
+          <div class="card-title"><span class="ct-icon">🎯</span> PKL Bingo</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-outline btn-sm" onclick="resetBingo()">Reset</button>
+            <button class="btn btn-primary btn-sm" onclick="newBingo()">Kartu Baru</button>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:12px;">Centang kotak kalau kejadian itu terjadi hari ini! Bingo = 5 berturut-turut!</div>
+        <div class="bingo-grid" id="bingo-grid"></div>
+        <div id="bingo-status" style="margin-top:12px;font-size:13px;font-weight:600;color:var(--red);text-align:center;"></div>
+      </div>
+    </div>
+
+    <!-- SPIN TAB -->
+    <div id="pane-spin" style="display:none;">
+      <div class="card" style="text-align:center;">
+        <div class="card-head">
+          <div class="card-title"><span class="ct-icon">🎡</span> Spin the Wheel</div>
+        </div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:16px;">Putar roda untuk tantangan atau kegiatan random hari ini!</div>
+        <div class="spin-container" style="margin-bottom:16px;">
+          <div class="spin-arrow">▼</div>
+          <canvas id="spin-canvas" width="260" height="260" style="border-radius:50%;cursor:pointer;" onclick="doSpin()"></canvas>
+        </div>
+        <button class="btn btn-primary btn-lg btn-full" onclick="doSpin()" id="spin-btn">🎡 Putar!</button>
+        <div id="spin-result" style="margin-top:14px;min-height:50px;display:flex;align-items:center;justify-content:center;"></div>
+      </div>
+    </div>
+
+    <!-- NASIB TAB -->
+    <div id="pane-nasib" style="display:none;">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="ct-icon">🔮</span> Nasib PKL Hari Ini</div>
+          <button class="btn btn-primary btn-sm" onclick="rollNasib()">🔮 Putar Nasib</button>
+        </div>
+        <div id="nasib-result" style="min-height:100px;display:flex;align-items:center;justify-content:center;text-align:center;">
+          <div style="color:var(--text-3);font-size:13px;">Klik tombol untuk lihat nasibmu hari ini 🔮</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROAST TAB -->
+    <div id="pane-roast" style="display:none;">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="ct-icon">😂</span> Roast Generator</div>
+        </div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:14px;">Pilih siapa yang mau di-roast 😈</div>
+        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+          <button class="btn btn-outline" onclick="roastUser('Shandy')">😂 Roast Shandy</button>
+          <button class="btn btn-outline" onclick="roastUser('Sabrina')">😂 Roast Sabrina</button>
+          <button class="btn btn-outline" onclick="roastUser('Fahri')">😂 Roast Fahri</button>
+        </div>
+        <div id="roast-result" style="min-height:80px;font-size:14px;font-weight:600;color:var(--text);line-height:1.6;"></div>
+        <button id="share-roast-btn" class="btn btn-outline btn-sm" style="margin-top:12px;display:none;" onclick="shareRoast()">📤 Share ke WA</button>
+      </div>
+    </div>
+
+    <!-- SIAPA TAB -->
+    <div id="pane-siapa" style="display:none;">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="ct-icon">🏆</span> Siapa yang Paling...</div>
+          <button class="btn btn-primary btn-sm" onclick="newQuestion()">Soal Baru</button>
+        </div>
+        <div id="siapa-q" style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px;">Loading...</div>
+        <div class="vote-options" id="siapa-opts"></div>
+        <div id="siapa-result" style="margin-top:14px;display:none;">
+          <div style="font-size:12px;color:var(--text-3);margin-bottom:8px;">Hasil voting:</div>
+          <div id="siapa-bars"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/telegram.js"></script>
+<script src="js/autodown.js"></script>
+<script>
+const user = requireSession();
+if (user.isGuest) window.location.href = "jurnal.html";
+initPage("games");
+
+// ── Tab system ────────────────────────────────────────────
+const TABS = ["quiz","bingo","spin","nasib","roast","siapa"];
+function showTab(id) {
+  TABS.forEach(t => {
+    document.getElementById(`pane-${t}`).style.display = t===id ? "block" : "none";
+    const btn = document.getElementById(`tab-${t}`);
+    if (btn) { btn.className = t===id ? "btn btn-primary btn-sm" : "btn btn-outline btn-sm"; }
+  });
+  if (id==="spin" && !spinInited) initSpin();
+  if (id==="bingo" && !bingoInited) initBingo();
+  if (id==="siapa") newQuestion();
+}
+
+// ════════════════════════════════════════
+//  QUIZ HARIAN TKJ + RPL
+// ════════════════════════════════════════
+const QUIZ_BANK = [
+  // TKJ
+  { q:"Kepanjangan dari OSI dalam model jaringan adalah?", opts:["Open Systems Interconnection","Open Standard Interface","Optical Signal Interface","Open Server Integration"], ans:0, cat:"TKJ" },
+  { q:"Berapa jumlah layer pada model OSI?", opts:["5","6","7","8"], ans:2, cat:"TKJ" },
+  { q:"Protokol yang digunakan untuk mengirim email adalah?", opts:["FTP","HTTP","SMTP","DNS"], ans:2, cat:"TKJ" },
+  { q:"IP Address kelas C memiliki range berapa?", opts:["1-126","128-191","192-223","224-239"], ans:2, cat:"TKJ" },
+  { q:"Perangkat yang berfungsi menghubungkan dua jaringan berbeda adalah?", opts:["Switch","Hub","Router","Repeater"], ans:2, cat:"TKJ" },
+  { q:"Port default untuk HTTPS adalah?", opts:["80","443","8080","22"], ans:1, cat:"TKJ" },
+  { q:"DNS singkatan dari?", opts:["Data Network System","Domain Name System","Digital Network Service","Data Node Server"], ans:1, cat:"TKJ" },
+  { q:"Subnet mask untuk kelas B adalah?", opts:["255.0.0.0","255.255.0.0","255.255.255.0","255.255.255.128"], ans:1, cat:"TKJ" },
+  { q:"Protokol yang bekerja pada layer Transport OSI adalah?", opts:["IP","TCP","HTTP","ARP"], ans:1, cat:"TKJ" },
+  { q:"Kabel UTP kategori berapa yang umum digunakan untuk Gigabit Ethernet?", opts:["Cat3","Cat5","Cat5e/Cat6","Cat7"], ans:2, cat:"TKJ" },
+  { q:"DHCP digunakan untuk?", opts:["Mengenkripsi data","Memberikan IP otomatis","Routing paket","Translasi domain"], ans:1, cat:"TKJ" },
+  { q:"Topology jaringan yang semua perangkat terhubung ke satu kabel utama disebut?", opts:["Star","Ring","Bus","Mesh"], ans:2, cat:"TKJ" },
+  { q:"Perintah Linux untuk melihat konfigurasi IP adalah?", opts:["ipconfig","ifconfig/ip addr","netstat","ping"], ans:1, cat:"TKJ" },
+  { q:"VLAN adalah singkatan dari?", opts:["Virtual LAN","Virtual Layer Access Network","Verified Local Area Network","Volume LAN"], ans:0, cat:"TKJ" },
+  { q:"Protokol yang digunakan untuk transfer file adalah?", opts:["SMTP","HTTP","FTP","DNS"], ans:2, cat:"TKJ" },
+  // RPL
+  { q:"HTML singkatan dari?", opts:["Hyper Text Markup Language","High Text Making Language","Hyper Transfer Markup Language","High Transfer Making Language"], ans:0, cat:"RPL" },
+  { q:"Tag HTML untuk membuat link adalah?", opts:["<link>","<a>","<href>","<url>"], ans:1, cat:"RPL" },
+  { q:"CSS digunakan untuk?", opts:["Logika program","Styling tampilan web","Database","Server-side scripting"], ans:1, cat:"RPL" },
+  { q:"Dalam OOP, inheritance artinya?", opts:["Penyembunyian data","Pewarisan sifat dari class induk","Pembuatan objek","Polimorfisme"], ans:1, cat:"RPL" },
+  { q:"Database yang menggunakan SQL adalah?", opts:["MongoDB","Firebase","MySQL","Redis"], ans:2, cat:"RPL" },
+  { q:"API singkatan dari?", opts:["Application Programming Interface","Applied Protocol Integration","Automatic Program Interface","Application Protocol Integration"], ans:0, cat:"RPL" },
+  { q:"Struktur data yang bersifat LIFO adalah?", opts:["Queue","Stack","Array","Linked List"], ans:1, cat:"RPL" },
+  { q:"Bahasa pemrograman yang digunakan untuk pengembangan Android native adalah?", opts:["Swift","Kotlin/Java","Python","C#"], ans:1, cat:"RPL" },
+  { q:"HTTP status code 404 berarti?", opts:["OK","Not Found","Internal Server Error","Unauthorized"], ans:1, cat:"RPL" },
+  { q:"Git digunakan untuk?", opts:["Desain UI","Version control","Database management","Web hosting"], ans:1, cat:"RPL" },
+  { q:"Framework JavaScript yang dikembangkan Facebook adalah?", opts:["Vue.js","Angular","React","Svelte"], ans:2, cat:"RPL" },
+  { q:"Apa itu responsive design?", opts:["Desain yang cepat","Desain yang menyesuaikan berbagai ukuran layar","Desain yang interaktif","Desain yang offline"], ans:1, cat:"RPL" },
+  { q:"JSON singkatan dari?", opts:["Java Script Object Notation","Java Source Object Node","JavaScript Online Notation","Java Simple Object Node"], ans:0, cat:"RPL" },
+  { q:"Dalam MVC, V singkatan dari?", opts:["Value","Variable","View","Version"], ans:2, cat:"RPL" },
+  { q:"Algoritma pengurutan paling efisien rata-rata adalah?", opts:["Bubble Sort","Selection Sort","Quick Sort","Insertion Sort"], ans:2, cat:"RPL" },
+];
+
+let quizIdx = 0, quizCorrect = 0, quizTotal = 0;
+let quizQueue = [];
+
+function initQuiz() {
+  quizQueue = [...QUIZ_BANK].sort(() => Math.random()-0.5);
+  quizIdx = 0; quizCorrect = 0; quizTotal = 0;
+  updateQuizScore();
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (quizIdx >= quizQueue.length) {
+    quizIdx = 0;
+    quizQueue = [...QUIZ_BANK].sort(() => Math.random()-0.5);
+  }
+  const q = quizQueue[quizIdx];
+  document.getElementById("quiz-meta").textContent = `Soal ${quizTotal+1} · Kategori: ${q.cat}`;
+  document.getElementById("quiz-q").textContent = q.q;
+  const opts = document.getElementById("quiz-opts");
+  opts.innerHTML = q.opts.map((o,i) => `
+    <button class="quiz-opt" onclick="answerQuiz(${i},${q.ans})">${String.fromCharCode(65+i)}. ${escHtml(o)}</button>
+  `).join("");
+  document.getElementById("quiz-result").style.display = "none";
+}
+
+function answerQuiz(selected, correct) {
+  const btns = document.querySelectorAll(".quiz-opt");
+  btns.forEach((b,i) => {
+    b.disabled = true;
+    if (i === correct) b.classList.add("correct");
+    else if (i === selected) b.classList.add("wrong");
+  });
+  quizTotal++;
+  if (selected === correct) { quizCorrect++; showToast("✓ Benar! 🎉", "success"); }
+  else { showToast("✕ Salah! Jawaban: " + String.fromCharCode(65+correct), "error"); }
+  updateQuizScore();
+
+  const res = document.getElementById("quiz-result");
+  res.style.display = "block";
+  res.innerHTML = selected===correct
+    ? `<span style="color:var(--green);font-weight:600;">✓ Benar!</span>`
+    : `<span style="color:var(--red);font-weight:600;">✕ Jawaban benar: ${String.fromCharCode(65+correct)}. ${escHtml(quizQueue[quizIdx].opts[correct])}</span>`;
+
+  quizIdx++;
+  setTimeout(loadQuestion, 1800);
+}
+
+function updateQuizScore() {
+  document.getElementById("quiz-correct").textContent = quizCorrect;
+  document.getElementById("quiz-total").textContent   = quizTotal;
+}
+
+initQuiz();
+
+// ════════════════════════════════════════
+//  BINGO
+// ════════════════════════════════════════
+const BINGO_ITEMS = [
+  "Wifi kantor lemot","Disuruh beli minum","Printer macet","PC klien rusak","Kabel cabut sendiri",
+  "Pembimbing tiba-tiba baik","Meeting dadakan","Listrik mati sebentar","Tugas mendadak","Copy paste data banyak",
+  "⭐ FREE ⭐","Disuruh foto-foto","Install ulang Windows","LAN cable putus","Password lupa",
+  "Ngantuk habis makan siang","Nge-debug error aneh","Ditanya hal yang tidak tau","Kerja overtime dikit","Update Windows",
+  "Diminta tolong rekan","Sinyal HP jelek","Driver tidak detected","IP conflict","Jaringan down",
+];
+let bingoState = new Array(25).fill(false);
+let bingoInited = false;
+
+function initBingo() {
+  bingoInited = true;
+  const saved = JSON.parse(localStorage.getItem("pkl_bingo_state")||"null");
+  if (saved && saved.date === new Date().toISOString().slice(0,10)) {
+    bingoState = saved.state;
+  } else {
+    bingoState = new Array(25).fill(false);
+    bingoState[12] = true; // FREE
+  }
+  renderBingo();
+}
+
+function renderBingo() {
+  const grid = document.getElementById("bingo-grid");
+  grid.innerHTML = BINGO_ITEMS.map((item,i) => `
+    <div class="bingo-cell ${bingoState[i]?"marked":""} ${i===12?"free":""}"
+         onclick="${i!==12?`toggleBingo(${i})`:""}">
+      ${item}
+    </div>`).join("");
+  checkBingo();
+}
+
+function toggleBingo(i) {
+  bingoState[i] = !bingoState[i];
+  localStorage.setItem("pkl_bingo_state", JSON.stringify({ date:new Date().toISOString().slice(0,10), state:bingoState }));
+  renderBingo();
+}
+
+function resetBingo() { bingoState = new Array(25).fill(false); bingoState[12]=true; renderBingo(); }
+function newBingo()   { BINGO_ITEMS.sort(()=>Math.random()-.5); resetBingo(); }
+
+function checkBingo() {
+  const lines = [
+    [0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18,19],[20,21,22,23,24],
+    [0,5,10,15,20],[1,6,11,16,21],[2,7,12,17,22],[3,8,13,18,23],[4,9,14,19,24],
+    [0,6,12,18,24],[4,8,12,16,20]
+  ];
+  const status = document.getElementById("bingo-status");
+  const hasBingo = lines.some(line => line.every(i => bingoState[i]));
+  if (hasBingo) {
+    status.textContent = "🎉 BINGO! Kamu menang!";
+    launchConfetti(80);
+  } else {
+    const marked = bingoState.filter(Boolean).length;
+    status.textContent = marked > 5 ? `${marked} kejadian tertandai — hampir BINGO!` : "";
+  }
+}
+
+// ════════════════════════════════════════
+//  SPIN WHEEL
+// ════════════════════════════════════════
+const SPIN_ITEMS = [
+  { text:"Minta feedback ke pembimbing", color:"#dc2626" },
+  { text:"Dokumentasi 1 hal baru hari ini", color:"#b91c1c" },
+  { text:"Bantu rekan kerja", color:"#dc2626" },
+  { text:"Isi jurnal sekarang!", color:"#991b1b" },
+  { text:"Belajar 1 skill baru", color:"#dc2626" },
+  { text:"Foto kegiatan hari ini", color:"#b91c1c" },
+  { text:"Absen sekarang kalau belum", color:"#dc2626" },
+  { text:"Ucapkan terima kasih ke pembimbing", color:"#991b1b" },
+];
+
+let spinAngle = 0, spinInited = false, isSpinning = false;
+
+function initSpin() {
+  spinInited = true;
+  drawWheel(0);
+}
+
+function drawWheel(rotation) {
+  const canvas = document.getElementById("spin-canvas");
+  if (!canvas) return;
+  const ctx    = canvas.getContext("2d");
+  const cx     = 130, cy = 130, r = 126;
+  const arc    = (2*Math.PI) / SPIN_ITEMS.length;
+  ctx.clearRect(0,0,260,260);
+  SPIN_ITEMS.forEach((item,i) => {
+    const start = rotation + i*arc;
+    const end   = start + arc;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,start,end);
+    ctx.fillStyle = i%2===0 ? item.color : "#111111";
+    ctx.fill();
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
+    ctx.stroke();
+    // Text
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(start + arc/2);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 10px 'Plus Jakarta Sans',sans-serif";
+    const words = item.text.split(" ");
+    const lineH = 13;
+    const startY = -(words.length-1)*lineH/2;
+    words.forEach((w,wi) => ctx.fillText(w, r-10, startY+wi*lineH));
+    ctx.restore();
+  });
+  // Center circle
+  ctx.beginPath();
+  ctx.arc(cx,cy,18,0,2*Math.PI);
+  ctx.fillStyle = "#fff"; ctx.fill();
+  ctx.strokeStyle = "#dc2626"; ctx.lineWidth = 3;
+  ctx.stroke();
+}
+
+function doSpin() {
+  if (isSpinning) return;
+  isSpinning = true;
+  document.getElementById("spin-btn").disabled = true;
+  document.getElementById("spin-result").innerHTML = "";
+  const extraSpins = (5+Math.floor(Math.random()*5)) * 2*Math.PI;
+  const target     = spinAngle + extraSpins + Math.random()*2*Math.PI;
+  const duration   = 3000;
+  const start      = performance.now();
+  const startAngle = spinAngle;
+
+  function animate(now) {
+    const elapsed  = now - start;
+    const progress = Math.min(elapsed/duration, 1);
+    const ease     = 1 - Math.pow(1-progress, 4);
+    const current  = startAngle + (target-startAngle)*ease;
+    drawWheel(current);
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      spinAngle = current % (2*Math.PI);
+      isSpinning = false;
+      document.getElementById("spin-btn").disabled = false;
+      // Determine result
+      const arc    = (2*Math.PI) / SPIN_ITEMS.length;
+      const norm   = ((2*Math.PI) - (spinAngle % (2*Math.PI))) % (2*Math.PI);
+      const idx    = Math.floor(norm/arc) % SPIN_ITEMS.length;
+      const result = SPIN_ITEMS[idx];
+      document.getElementById("spin-result").innerHTML = `
+        <div style="background:var(--red-bg);border:2px solid var(--red);border-radius:var(--r-lg);padding:16px;animation:scaleIn .3s;">
+          <div style="font-size:12px;color:var(--text-3);margin-bottom:6px;">Tantangan kamu hari ini:</div>
+          <div class="spin-result-text">🎯 ${result.text}</div>
+        </div>`;
+      launchConfetti(40);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+// ════════════════════════════════════════
+//  NASIB PKL
+// ════════════════════════════════════════
+const NASIB_LIST = [
+  "Hari ini kamu akan disuruh beli kopi — tapi tidak apa-apa, anggap latihan customer service ☕",
+  "Printer akan macet tepat saat kamu butuh print — sudah takdir 🖨️",
+  "Pembimbingmu hari ini unexpectedly baik sekali — manfaatkan! 😇",
+  "Wifi kantor akan lemot jam 10 pagi — siapkan mental 📶",
+  "Kamu akan menemukan bug yang tidak bisa dijelaskan — classic 🐛",
+  "Ada tugas mendadak datang — tapi kamu pasti bisa selesaikan 💪",
+  "Hari ini klien banyak — rezeki! 🎯",
+  "PC akan restart sendiri — anggap istirahat sebentar 😴",
+  "Kabel LAN akan cabut sendiri — latihan crimping! 🔌",
+  "Hari ini productive banget — semua beres sebelum jam 3! 🚀",
+  "Password akan lupa — tapi kamu ingat setelah 10 menit 🔐",
+  "Hari biasa saja — dan itu sudah lebih dari cukup 🌤️",
+  "Sinyal HP jelek — anggap digital detox 📵",
+  "IP conflict datang tanpa diundang — kamu tahu cara fixnya 🌐",
+  "Hari ini kamu jadi pahlawan kantor — masalah terpecahkan! 🦸",
+];
+
+function rollNasib() {
+  const el   = document.getElementById("nasib-result");
+  const nasib = NASIB_LIST[Math.floor(Math.random()*NASIB_LIST.length)];
+  el.innerHTML = `
+    <div style="animation:scaleIn .3s;max-width:400px;">
+      <div style="font-size:28px;margin-bottom:10px;">🔮</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text);line-height:1.6;">${nasib}</div>
+      <button class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="shareNasib(this.previousElementSibling.textContent)">📤 Share ke WA</button>
+    </div>`;
+}
+
+function shareNasib(text) {
+  const url = `https://wa.me/?text=${encodeURIComponent("🔮 Nasib PKL hari ini:\n\n"+text+"\n\n— PKL Journal, Sentra Computer")}`;
+  window.open(url, "_blank");
+}
+
+// ════════════════════════════════════════
+//  ROAST GENERATOR
+// ════════════════════════════════════════
+const ROASTS = {
+  Shandy: [
+    "Shandy, jurnal kamu lebih kosong dari semangat kamu kerja 😂",
+    "Shandy rajin sih, rajin nunda ngisi jurnal 💀",
+    "Shandy, absensimu lebih bagus dari produktivitasmu — at least dateng 😅",
+    "Shandy kerja keras, keras tidurnya bukan kerjanya 🛌",
+    "Shandy skill networking-nya bagus — networking sosial maksudnya 😂",
+  ],
+  Sabrina: [
+    "Sabrina, foto PKL kamu lebih banyak dari entri jurnalnya 📸",
+    "Sabrina rajin upload gallery tapi jurnalnya cuma 3 baris 💀",
+    "Sabrina, absennya tepat waktu — jurnal tepat minggu depan 😂",
+    "Sabrina skill-nya bagus, tapi skill nulis jurnal perlu di-upgrade 🔧",
+    "Sabrina mood-nya selalu produktif di jurnal, tapi yang ngisi siapa? 😅",
+  ],
+  Fahri: [
+    "Fahri, streak kamu lebih panjang dari kabel LAN di gudang 💀",
+    "Fahri absen tiap hari tapi jurnal seminggu sekali — consistency bro! 😂",
+    "Fahri kerjanya bener, jurnalnya yang perlu di-debug 🐛",
+    "Fahri, photo gallery-mu 0 — emang mau jadi ghost worker? 👻",
+    "Fahri bilang sibuk — sibuk scroll HP maksudnya 😂",
+  ],
+};
+
+let lastRoast = "";
+function roastUser(name) {
+  const list   = ROASTS[name] || [];
+  const roast  = list[Math.floor(Math.random()*list.length)];
+  lastRoast = roast;
+  document.getElementById("roast-result").textContent = roast;
+  document.getElementById("share-roast-btn").style.display = "inline-flex";
+}
+
+function shareRoast() {
+  const url = `https://wa.me/?text=${encodeURIComponent("😂 PKL Roast:\n\n"+lastRoast+"\n\n— PKL Journal, Sentra Computer")}`;
+  window.open(url, "_blank");
+}
+
+// ════════════════════════════════════════
+//  SIAPA PALING...
+// ════════════════════════════════════════
+const SIAPA_QS = [
+  "Siapa yang paling rajin isi jurnal minggu ini?",
+  "Siapa yang paling sering telat absen?",
+  "Siapa yang paling banyak upload foto?",
+  "Siapa yang paling sering mood 'lelah'?",
+  "Siapa yang paling produktif hari ini?",
+  "Siapa yang jurnal-nya paling panjang?",
+  "Siapa yang paling cepat kerja?",
+  "Siapa yang paling banyak tanya ke pembimbing?",
+  "Siapa yang streak-nya paling panjang?",
+  "Siapa yang paling sering lupa absen?",
+];
+const MEMBERS = ["Shandy","Sabrina","Fahri"];
+let currentSiapaQ = "";
+
+function newQuestion() {
+  currentSiapaQ = SIAPA_QS[Math.floor(Math.random()*SIAPA_QS.length)];
+  document.getElementById("siapa-q").textContent = currentSiapaQ;
+  document.getElementById("siapa-result").style.display = "none";
+  document.getElementById("siapa-opts").innerHTML = MEMBERS.map(m => `
+    <button class="vote-option" onclick="voteSiapa('${m}')">${m}</button>
+  `).join("");
+}
+
+async function voteSiapa(member) {
+  const key = btoa(currentSiapaQ).replace(/[^a-z0-9]/gi,"").slice(0,20);
+  await db.ref(`siapa/${key}`).transaction(cur => {
+    if (!cur) cur = {};
+    cur[member] = (cur[member]||0)+1;
+    cur._question = currentSiapaQ;
+    return cur;
+  });
+  showSiapaResult(key);
+}
+
+function showSiapaResult(key) {
+  db.ref(`siapa/${key}`).once("value", snap => {
+    const data = snap.val()||{};
+    const total = MEMBERS.reduce((s,m)=>s+(data[m]||0),0)||1;
+    document.getElementById("siapa-result").style.display = "block";
+    document.getElementById("siapa-bars").innerHTML = MEMBERS.map(m => {
+      const pct = Math.round((data[m]||0)/total*100);
+      return `
+      <div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+          <span style="font-weight:600;">${m}</span>
+          <span style="color:var(--text-3);">${data[m]||0} vote (${pct}%)</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:var(--red);"></div></div>
+      </div>`;
+    }).join("");
+    // Disable vote buttons
+    document.querySelectorAll(".vote-option").forEach(b => b.disabled=true);
+  });
+}
+
+newQuestion();
+</script>
+</body>
+</html>

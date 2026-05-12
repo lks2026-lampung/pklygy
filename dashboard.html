@@ -2,23 +2,23 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Dashboard — PKL Journal</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="page-wrapper">
+<div class="app">
   <div id="sidebar-mount"></div>
   <main class="main">
 
-    <div class="page-header">
+    <div class="page-head">
       <h1>Command <span class="accent">Center</span></h1>
-      <div class="sub" id="dash-greeting">Selamat datang!</div>
+      <div class="ph-sub" id="dash-greeting">Selamat datang!</div>
     </div>
 
     <!-- JAM DIGITAL -->
-    <div class="clock-card">
-      <div class="clock-display">
+    <div class="clock-card" style="margin-bottom:14px;">
+      <div class="clock-time">
         <span class="clock-seg" id="clock-hh">--</span>
         <span class="clock-colon">:</span>
         <span class="clock-seg" id="clock-mm">--</span>
@@ -29,67 +29,136 @@
     </div>
 
     <!-- TIMER PKL -->
-    <div class="timer-card">
-      <div class="timer-title"><span class="timer-live-dot"></span> Durasi PKL Berjalan · Sentra Computer</div>
+    <div class="timer-card" style="margin-bottom:14px;">
+      <div class="timer-head">
+        <span>Durasi PKL Berjalan</span>
+        <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+      </div>
       <div class="timer-grid">
-        <div class="timer-unit"><span class="timer-num" id="timer-days">---</span><span class="timer-label">Hari</span></div>
-        <div class="timer-unit"><span class="timer-num" id="timer-hours">--</span><span class="timer-label">Jam</span></div>
-        <div class="timer-unit"><span class="timer-num" id="timer-mins">--</span><span class="timer-label">Menit</span></div>
-        <div class="timer-unit"><span class="timer-num" id="timer-secs">--</span><span class="timer-label">Detik</span></div>
+        <div class="timer-unit"><span class="timer-num" id="timer-days">---</span><span class="timer-lbl">Hari</span></div>
+        <div class="timer-unit"><span class="timer-num" id="timer-hours">--</span><span class="timer-lbl">Jam</span></div>
+        <div class="timer-unit"><span class="timer-num" id="timer-mins">--</span><span class="timer-lbl">Menit</span></div>
+        <div class="timer-unit"><span class="timer-num" id="timer-secs">--</span><span class="timer-lbl">Detik</span></div>
       </div>
-      <div class="progress-wrap">
-        <div class="progress-header">
-          <span class="progress-label">Progress PKL · Hari kerja: <strong id="timer-workday" style="color:var(--blue)">—</strong></span>
-          <span class="progress-pct" id="pkl-progress-pct">0%</span>
+      <div class="prog-wrap">
+        <div class="prog-head">
+          <span class="prog-label">Progress PKL · Hari kerja: <strong id="timer-workday" style="color:var(--red)">—</strong></span>
+          <span class="prog-pct" id="pkl-progress-pct">0%</span>
         </div>
-        <div class="progress-track"><div class="progress-bar" id="pkl-progress-bar"></div></div>
-        <div class="progress-dates"><span>4 Mei 2026</span><span>25 Sep 2026</span></div>
+        <div class="prog-track"><div class="prog-bar" id="pkl-progress-bar"></div></div>
+        <div class="prog-dates"><span>4 Mei 2026</span><span>25 Sep 2026</span></div>
       </div>
     </div>
 
-    <!-- ABSENSI STATUS -->
-    <div class="card" style="margin-bottom:18px;">
-      <div class="card-title"><span class="dot"></span> Absensi Hari Ini</div>
-      <div id="absensi-status">Memuat...</div>
+    <!-- JAM ISTIRAHAT & PULANG -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head">
+        <div class="card-title"><span class="ct-icon">⏰</span> Countdown Hari Ini</div>
+      </div>
+      <div class="shift-timers">
+        <div class="shift-card break">
+          <div class="shift-label">☕ Istirahat (12:00)</div>
+          <div class="shift-time" id="shift-break">--:--:--</div>
+          <div class="shift-sub">Tahan dulu, bentar lagi!</div>
+        </div>
+        <div class="shift-card finish">
+          <div class="shift-label">🏃 Pulang (17:00)</div>
+          <div class="shift-time" id="shift-finish">--:--:--</div>
+          <div class="shift-sub">Hampir sampai garis finish!</div>
+        </div>
+      </div>
     </div>
 
-    <!-- STREAK -->
-    <div class="card" style="margin-bottom:18px;">
-      <div class="card-title"><span class="dot" style="background:var(--amber);box-shadow:0 0 6px rgba(255,136,0,.4);"></span> Streak Jurnal</div>
-      <div id="streak-card">Memuat...</div>
+    <!-- STATUS ONLINE -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head">
+        <div class="card-title"><span class="ct-icon">🟢</span> Sedang Online</div>
+      </div>
+      <div class="online-users" id="online-users">
+        <div style="font-size:12px;color:var(--text-3);">Memuat...</div>
+      </div>
+    </div>
+
+    <!-- ABSENSI + STREAK -->
+    <div class="grid-2" style="margin-bottom:14px;">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">📍</span> Absensi Hari Ini</div>
+        <div id="absensi-status">Memuat...</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">🔥</span> Streak Jurnal</div>
+        <div id="streak-card">Memuat...</div>
+      </div>
     </div>
 
     <!-- STATS -->
-    <div class="stats-grid">
-      <div class="stat-card blue"><div class="stat-label">Total Entri</div><div class="stat-value" id="stat-total">—</div><div class="stat-desc">jurnal tercatat</div></div>
-      <div class="stat-card amber"><div class="stat-label">Hari Tercatat</div><div class="stat-value" id="stat-hari">—</div><div class="stat-desc">dari ~108 hari kerja</div></div>
-      <div class="stat-card green"><div class="stat-label">Aktif Minggu Ini</div><div class="stat-value" id="stat-week">—</div><div class="stat-desc">hari diisi jurnal</div></div>
-      <div class="stat-card purple"><div class="stat-label">Entri Terakhir</div><div class="stat-value" id="stat-last" style="font-size:16px;padding-top:8px;">—</div><div class="stat-desc">tanggal terakhir isi</div></div>
+    <div class="grid-4" style="margin-bottom:14px;">
+      <div class="stat-card sc-red">
+        <div class="sc-icon">📓</div>
+        <div class="sc-label">Total Entri</div>
+        <div class="sc-value" id="stat-total">—</div>
+        <div class="sc-desc">jurnal tercatat</div>
+      </div>
+      <div class="stat-card sc-amber">
+        <div class="sc-icon">📅</div>
+        <div class="sc-label">Hari Tercatat</div>
+        <div class="sc-value" id="stat-hari">—</div>
+        <div class="sc-desc">dari ~108 hari</div>
+      </div>
+      <div class="stat-card sc-green">
+        <div class="sc-icon">✅</div>
+        <div class="sc-label">Aktif Minggu Ini</div>
+        <div class="sc-value" id="stat-week">—</div>
+        <div class="sc-desc">hari diisi jurnal</div>
+      </div>
+      <div class="stat-card sc-black">
+        <div class="sc-icon">🕐</div>
+        <div class="sc-label">Entri Terakhir</div>
+        <div class="sc-value" id="stat-last" style="font-size:14px;padding-top:6px;">—</div>
+        <div class="sc-desc">tanggal terakhir isi</div>
+      </div>
     </div>
 
     <!-- QUICK ACTIONS -->
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
       <a href="jurnal.html"  class="btn btn-primary">📓 Tambah Jurnal</a>
-      <a href="absensi.html" class="btn btn-secondary">📍 Absensi</a>
-      <a href="gallery.html" class="btn btn-secondary">📸 Gallery</a>
-      <a href="semangat.html" class="btn btn-secondary">✨ Semangat</a>
+      <a href="absensi.html" class="btn btn-outline">📍 Absensi</a>
+      <a href="gallery.html" class="btn btn-outline">📸 Gallery</a>
+      <a href="games.html"   class="btn btn-outline">🎮 Games</a>
+      <a href="semangat.html" class="btn btn-outline">✨ Semangat</a>
     </div>
 
     <!-- SEARCH -->
-    <div class="card" style="margin-bottom:18px;">
-      <div class="card-title"><span class="dot"></span> Cari Jurnal</div>
-      <input type="text" id="search-input" placeholder="Cari kegiatan, kategori, nama..." oninput="searchJournal()" style="width:100%;">
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">🔍</span> Cari Jurnal</div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Cari kegiatan, nama, kategori..." oninput="searchJournal()">
+      </div>
       <div id="search-results" style="margin-top:10px;"></div>
     </div>
 
-    <!-- RECENT -->
-    <div class="card" style="margin-bottom:18px;">
-      <div class="card-title"><span class="dot"></span> 5 Entri Terbaru</div>
-      <div class="table-wrap">
+    <!-- RECENT ENTRIES -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">📋</span> 5 Entri Terbaru</div>
+      <div class="tbl-wrap">
         <table>
           <thead><tr><th>Tanggal</th><th>Nama</th><th>Kategori</th><th>Kegiatan</th><th>Mood</th></tr></thead>
-          <tbody id="recent-tbody"><tr><td colspan="5" class="empty-state"><div class="empty-icon">📓</div>Belum ada entri</td></tr></tbody>
+          <tbody id="recent-tbody">
+            <tr><td colspan="5" class="empty"><div class="empty-icon">📓</div>Belum ada entri</td></tr>
+          </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- FOTO HARI INI -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head">
+        <div class="card-title"><span class="ct-icon">📸</span> Foto Hari Ini</div>
+        <a href="gallery.html" class="btn btn-outline btn-sm">Lihat Semua</a>
+      </div>
+      <div id="foto-hari-ini">
+        <div class="empty"><div class="empty-icon">📷</div><div class="empty-text">Belum ada foto hari ini</div></div>
       </div>
     </div>
 
@@ -116,9 +185,7 @@
 <script src="js/autodown.js"></script>
 <script>
 const user = requireSession();
-// Block guest
-if (user.isGuest) window.location.href = "jurnal.html";
-
+if (user.isGuest) { window.location.href = "jurnal.html"; }
 initPage("dashboard");
 startClock();
 initNotifications(user.display);
@@ -127,69 +194,119 @@ const h = new Date().getHours();
 const gr = h<11?"Selamat pagi":h<15?"Selamat siang":h<18?"Selamat sore":"Selamat malam";
 document.getElementById("dash-greeting").textContent = `${gr}, ${user.display}! 👋`;
 
+// Absensi
 renderAbsensiStatus(user.uid, user.display, "absensi-status");
+
+// Streak
 calculateStreak(user.display).then(data => renderStreakCard(data, "streak-card"));
+
+// Stats
 countEntries(user.uid, n => document.getElementById("stat-total").textContent = n);
 weekStreak(user.uid, n => document.getElementById("stat-week").textContent = n);
 
 journalRef().once("value", snap => {
-  const days=new Set(); let lastTanggal=null, latestTs=0;
+  const days = new Set(); let lastTanggal = null, latestTs = 0;
   snap.forEach(c => {
-    const d=c.val();
-    if(d.tanggal) days.add(d.tanggal);
-    if((d.createdAt||0)>latestTs){latestTs=d.createdAt;lastTanggal=d.tanggal;}
+    const d = c.val();
+    if (d.tanggal) days.add(d.tanggal);
+    if ((d.createdAt||0) > latestTs) { latestTs = d.createdAt; lastTanggal = d.tanggal; }
   });
   document.getElementById("stat-hari").textContent = days.size;
-  document.getElementById("stat-last").textContent = lastTanggal||"—";
+  document.getElementById("stat-last").textContent = lastTanggal || "—";
 });
 
+// Recent 5
 journalRef().orderByChild("createdAt").limitToLast(5).once("value", snap => {
-  const rows=[]; snap.forEach(c=>rows.unshift({key:c.key,...c.val()}));
-  const tbody=document.getElementById("recent-tbody");
-  if(!rows.length) return;
-  const MOOD={produktif:"🔥",biasa:"😐",lelah:"😴",seru:"⚡",belajar:"🧠"};
-  tbody.innerHTML=rows.map(e=>`
+  const rows = []; snap.forEach(c => rows.unshift({ key:c.key, ...c.val() }));
+  const tbody = document.getElementById("recent-tbody");
+  if (!rows.length) return;
+  const MOOD = { produktif:"🔥", biasa:"😐", lelah:"😴", seru:"⚡", belajar:"🧠" };
+  tbody.innerHTML = rows.map(e => `
     <tr>
       <td class="td-date">${e.tanggal||"—"}</td>
-      <td style="font-size:11px;">${e.userName||"—"}</td>
+      <td class="td-name">${escHtml(e.userName||"—")}</td>
       <td><span class="badge badge-${(e.kategori||"lainnya").toLowerCase()}">${e.kategori||"—"}</span></td>
-      <td style="max-width:220px;font-size:12px;">${escHtml(e.kegiatan||"")}</td>
-      <td class="td-mood">${MOOD[e.mood]||"❓"}</td>
+      <td style="max-width:220px;">${escHtml(e.kegiatan||"")}</td>
+      <td style="text-align:center;">${MOOD[e.mood]||"❓"}</td>
     </tr>`).join("");
 });
 
+// Online users
+db.ref("online").on("value", snap => {
+  const el = document.getElementById("online-users");
+  const users = [];
+  const now = Date.now();
+  snap.forEach(c => {
+    const d = c.val();
+    if (now - (d.ts||0) < 120000) users.push(d); // active last 2min
+  });
+  if (!users.length) {
+    el.innerHTML = `<div style="font-size:12px;color:var(--text-3);">Tidak ada yang online saat ini</div>`;
+  } else {
+    el.innerHTML = users.map(u => `
+      <div class="online-user-card">
+        <div style="width:28px;height:28px;border-radius:8px;background:${u.color||"#dc2626"};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">${u.avatar||"?"}</div>
+        <span style="font-size:12px;font-weight:600;">${escHtml(u.name||"?")}</span>
+        <div class="ou-dot"></div>
+      </div>`).join("");
+  }
+});
+
+// Foto hari ini
+const todayStr = new Date().toISOString().slice(0,10);
+galleryRef().orderByChild("tanggal").equalTo(todayStr).once("value", snap => {
+  const photos = []; snap.forEach(c => photos.push({ key:c.key, ...c.val() }));
+  const el = document.getElementById("foto-hari-ini");
+  if (!photos.length) return;
+  // Show random one
+  const p = photos[Math.floor(Math.random()*photos.length)];
+  el.innerHTML = `
+    <div style="display:flex;gap:12px;align-items:center;">
+      <img src="${p.url}" alt="" style="width:80px;height:80px;border-radius:var(--r);object-fit:cover;border:1px solid var(--border);">
+      <div>
+        <div style="font-size:12px;font-weight:600;">${escHtml(p.userName||"")}</div>
+        ${p.caption ? `<div style="font-size:11px;color:var(--text-3);margin-top:2px;font-style:italic;">${escHtml(p.caption)}</div>` : ""}
+        <div style="font-size:10px;color:var(--text-3);margin-top:4px;">${photos.length} foto hari ini</div>
+        <a href="gallery.html" class="btn btn-outline btn-sm" style="margin-top:8px;">Lihat Gallery</a>
+      </div>
+    </div>`;
+});
+
+// Search
 function searchJournal() {
-  const q=document.getElementById("search-input").value.toLowerCase().trim();
-  const resEl=document.getElementById("search-results");
-  if(!q){resEl.innerHTML="";return;}
+  const q = document.getElementById("search-input").value.toLowerCase().trim();
+  const el = document.getElementById("search-results");
+  if (!q) { el.innerHTML = ""; return; }
   journalRef().once("value", snap => {
-    const results=[];
-    snap.forEach(c=>{
-      const d=c.val();
-      if(`${d.kegiatan||""} ${d.keterangan||""} ${d.kategori||""} ${d.userName||""}`.toLowerCase().includes(q))
-        results.push({key:c.key,...d});
+    const results = [];
+    snap.forEach(c => {
+      const d = c.val();
+      if (`${d.kegiatan||""} ${d.keterangan||""} ${d.kategori||""} ${d.userName||""}`.toLowerCase().includes(q))
+        results.push({ key:c.key, ...d });
     });
-    results.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-    if(!results.length){resEl.innerHTML=`<div style="font-size:12px;color:var(--text-3);padding:8px 0;">Tidak ada hasil untuk "${q}"</div>`;return;}
-    const MOOD={produktif:"🔥",biasa:"😐",lelah:"😴",seru:"⚡",belajar:"🧠"};
-    resEl.innerHTML=`<div style="font-size:11px;color:var(--text-3);margin-bottom:8px;">${results.length} hasil</div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Tanggal</th><th>Nama</th><th>Kategori</th><th>Kegiatan</th></tr></thead>
-      <tbody>${results.slice(0,10).map(e=>`
-        <tr>
-          <td class="td-date">${e.tanggal||"—"}</td>
-          <td style="font-size:11px;">${e.userName||"—"}</td>
-          <td><span class="badge badge-${(e.kategori||"lainnya").toLowerCase()}">${e.kategori||"—"}</span></td>
-          <td style="max-width:240px;font-size:12px;">${escHtml(e.kegiatan||"")}</td>
-        </tr>`).join("")}
-      </tbody>
-    </table></div>`;
+    results.sort((a,b) => (b.createdAt||0)-(a.createdAt||0));
+    if (!results.length) { el.innerHTML = `<div style="font-size:12px;color:var(--text-3);padding:8px 0;">Tidak ada hasil untuk "${escHtml(q)}"</div>`; return; }
+    const MOOD = { produktif:"🔥", biasa:"😐", lelah:"😴", seru:"⚡", belajar:"🧠" };
+    el.innerHTML = `
+      <div style="font-size:11px;color:var(--text-3);margin-bottom:8px;">${results.length} hasil ditemukan</div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Tanggal</th><th>Nama</th><th>Kategori</th><th>Kegiatan</th></tr></thead>
+        <tbody>${results.slice(0,8).map(e => `
+          <tr>
+            <td class="td-date">${e.tanggal||"—"}</td>
+            <td class="td-name">${escHtml(e.userName||"—")}</td>
+            <td><span class="badge badge-${(e.kategori||"lainnya").toLowerCase()}">${e.kategori||"—"}</span></td>
+            <td>${escHtml(e.kegiatan||"")}</td>
+          </tr>`).join("")}
+        </tbody>
+      </table></div>`;
   });
 }
 
-const q=getRandomQuote();
-document.getElementById("quote-text").textContent=`"${q.text}"`;
-document.getElementById("quote-author").textContent=q.author;
+// Quote
+const q = getRandomQuote();
+document.getElementById("quote-text").textContent = `"${q.text}"`;
+document.getElementById("quote-author").textContent = q.author;
 </script>
 </body>
 </html>

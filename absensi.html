@@ -2,126 +2,59 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Absensi — PKL Journal</title>
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      margin-top: 12px;
-    }
-    .cal-header {
-      text-align: center;
-      font-size: 9px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--text-3);
-      padding: 6px 0;
-      font-family: var(--font-mono);
-    }
-    .cal-day {
-      aspect-ratio: 1;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-family: var(--font-mono);
-      position: relative;
-      cursor: default;
-      transition: all .2s;
-    }
-    .cal-day.empty { background: transparent; }
-    .cal-day.normal { background: var(--bg2); color: var(--text-3); border: 1px solid var(--border); }
-    .cal-day.today { background: rgba(233,30,140,0.12); border: 2px solid var(--red2); color: var(--red2); font-weight: 700; }
-    .cal-day.hadir { background: rgba(38,166,154,0.15); border: 1px solid rgba(38,166,154,0.4); color: #00897b; }
-    .cal-day.hadir::after { content: "✓"; position: absolute; top: 2px; right: 4px; font-size: 8px; color: #00897b; }
-    .cal-day.weekend { opacity: 0.4; }
-    .cal-day.future { background: transparent; border: 1px dashed var(--border); color: var(--text-3); opacity: 0.4; }
-
-    .user-absen-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .user-absen-row:last-child { border-bottom: none; }
-    .absen-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .absen-dot.hadir  { background: #26a69a; box-shadow: 0 0 6px rgba(38,166,154,.5); }
-    .absen-dot.absent { background: var(--border2); }
-
-    .summary-bar {
-      height: 8px;
-      background: var(--bg2);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 4px;
-      border: 1px solid var(--border);
-    }
-    .summary-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #26a69a, #80cbc4);
-      border-radius: 4px;
-      transition: width .8s ease;
-    }
-  </style>
 </head>
 <body>
-<div class="page-wrapper">
+<div class="app">
   <div id="sidebar-mount"></div>
   <main class="main">
-
-    <div class="page-header">
-      <h1>📍 Absensi Harian</h1>
-      <div class="sub">Catat kehadiran PKL kamu setiap hari</div>
+    <div class="page-head">
+      <h1>📍 <span class="accent">Absensi</span> Harian</h1>
+      <div class="ph-sub">Catat kehadiran PKL setiap hari</div>
     </div>
 
-    <!-- STATUS ABSENSI HARI INI -->
-    <div class="card" style="margin-bottom:18px;">
-      <div class="card-title"><span class="dot"></span> Status Hari Ini</div>
+    <!-- STATUS HARI INI -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">✅</span> Status Hari Ini</div>
       <div id="absensi-status">Memuat...</div>
     </div>
 
-    <!-- REKAP ABSENSI BERTIGA HARI INI -->
-    <div class="card" style="margin-bottom:18px;">
-      <div class="card-title"><span class="dot"></span> Kehadiran Hari Ini</div>
+    <!-- KEHADIRAN BERTIGA HARI INI -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">👥</span> Kehadiran Hari Ini</div>
       <div id="today-rekap">Memuat...</div>
     </div>
 
-    <!-- KALENDER ABSENSI -->
-    <div class="card" style="margin-bottom:18px;">
-      <div class="card-title"><span class="dot"></span> Kalender Kehadiran — <span id="cal-month-label">—</span></div>
+    <!-- KALENDER -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head">
+        <div class="card-title"><span class="ct-icon">📅</span> Kalender — <span id="cal-label">—</span></div>
+      </div>
       <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-        <select class="filter-select" id="cal-month-select" onchange="loadCalendar()">
+        <select class="filter-select" id="cal-month" onchange="loadCalendar()">
           <option value="2026-05">Mei 2026</option>
           <option value="2026-06">Juni 2026</option>
           <option value="2026-07">Juli 2026</option>
           <option value="2026-08">Agustus 2026</option>
           <option value="2026-09">September 2026</option>
         </select>
-        <select class="filter-select" id="cal-user-select" onchange="loadCalendar()">
+        <select class="filter-select" id="cal-user">
           <option value="user_shandy">Shandy</option>
           <option value="user_sabrina">Sabrina</option>
           <option value="user_fahri">Fahri</option>
         </select>
+        <button class="btn btn-outline btn-sm" onclick="loadCalendar()">Lihat</button>
       </div>
       <div id="calendar-wrap"></div>
     </div>
 
-    <!-- REKAP BULANAN -->
-    <div class="card" style="margin-bottom:18px;">
-      <div class="card-title"><span class="dot" style="background:var(--amber);box-shadow:0 0 6px var(--amber);"></span> Rekap Kehadiran Semua User</div>
+    <!-- REKAP SEMUA USER -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;"><span class="ct-icon">📊</span> Rekap Kehadiran Total</div>
       <div id="rekap-absensi">Memuat...</div>
     </div>
-
   </main>
 </div>
 
@@ -136,112 +69,94 @@
 <script src="js/autodown.js"></script>
 <script>
 const user = requireSession();
+if (user.isGuest) window.location.href = "jurnal.html";
 initPage("absensi");
 
-const MONTH_NAMES = {"2026-05":"Mei 2026","2026-06":"Juni 2026","2026-07":"Juli 2026","2026-08":"Agustus 2026","2026-09":"September 2026"};
-const ALL_USERS   = [
-  { uid:"user_shandy",  name:"Shandy",  color:"#e91e8c" },
-  { uid:"user_sabrina", name:"Sabrina", color:"#ab47bc" },
-  { uid:"user_fahri",   name:"Fahri",   color:"#1976d2" },
+const MONTH_LABELS = {"2026-05":"Mei 2026","2026-06":"Juni 2026","2026-07":"Juli 2026","2026-08":"Agustus 2026","2026-09":"September 2026"};
+const ALL_USERS = [
+  { uid:"user_shandy",  name:"Shandy",  color:"#dc2626" },
+  { uid:"user_sabrina", name:"Sabrina", color:"#b91c1c" },
+  { uid:"user_fahri",   name:"Fahri",   color:"#991b1b" },
 ];
 
-// Set default bulan ke bulan sekarang
+// Set bulan default
 const nowMonth = new Date().toISOString().slice(0,7);
-const sel = document.getElementById("cal-month-select");
+const sel = document.getElementById("cal-month");
 if ([...sel.options].some(o=>o.value===nowMonth)) sel.value = nowMonth;
-document.getElementById("cal-user-select").value = user.uid;
+document.getElementById("cal-user").value = user.uid;
 
-// Status absensi hari ini
 renderAbsensiStatus(user.uid, user.display, "absensi-status");
 
-// Rekap hari ini semua user
+// Today rekap
 function loadTodayRekap() {
   const today = new Date().toISOString().slice(0,10);
   absensiRef().child(today).once("value", snap => {
-    const data = snap.val() || {};
-    const el   = document.getElementById("today-rekap");
-    el.innerHTML = ALL_USERS.map(u => {
+    const data = snap.val()||{};
+    document.getElementById("today-rekap").innerHTML = ALL_USERS.map(u => {
       const d = data[u.uid];
-      return `
-      <div class="user-absen-row">
-        <div class="avatar" style="background:${u.color};width:34px;height:34px;font-size:12px;">${u.name[0]}</div>
+      return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
+        <div style="width:34px;height:34px;border-radius:10px;background:${u.color};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;">${u.name[0]}</div>
         <div style="flex:1;">
-          <div style="font-size:13px;color:var(--text);font-weight:600;">${u.name}</div>
-          ${d ? `<div style="font-size:11px;color:#00897b;">✅ Hadir · Jam ${d.jam}</div>` : `<div style="font-size:11px;color:var(--text-3);">❌ Belum absen</div>`}
+          <div style="font-size:13px;font-weight:600;">${u.name}</div>
+          ${d ? `<div style="font-size:11px;color:var(--green);">✅ Hadir · Jam ${d.jam}</div>` : `<div style="font-size:11px;color:var(--text-3);">❌ Belum absen</div>`}
         </div>
-        <div class="absen-dot ${d?'hadir':'absent'}"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:${d?"var(--green)":"var(--border2)"};${d?"box-shadow:0 0 6px var(--green);":""}"></div>
       </div>`;
     }).join("");
   });
 }
 loadTodayRekap();
-// Refresh tiap 30 detik
 setInterval(loadTodayRekap, 30000);
 
-// Kalender
+// Calendar
 function loadCalendar() {
-  const month   = document.getElementById("cal-month-select").value;
-  const selUid  = document.getElementById("cal-user-select").value;
-  const label   = MONTH_NAMES[month] || month;
-  document.getElementById("cal-month-label").textContent = label;
+  const month   = document.getElementById("cal-month").value;
+  const selUid  = document.getElementById("cal-user").value;
+  document.getElementById("cal-label").textContent = MONTH_LABELS[month]||month;
 
   loadAbsensiMonth(month, data => {
-    const [y, m] = month.split("-").map(Number);
-    const firstDay = new Date(y, m-1, 1).getDay();
-    const daysInMonth = new Date(y, m, 0).getDate();
-    const today = new Date(); today.setHours(0,0,0,0);
+    const [y,m] = month.split("-").map(Number);
+    const firstDay   = new Date(y,m-1,1).getDay();
+    const daysInMonth= new Date(y,m,0).getDate();
+    const today      = new Date(); today.setHours(0,0,0,0);
+    const days       = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
 
-    const days = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
-    let html = days.map(d=>`<div class="cal-header">${d}</div>`).join("");
-    for (let i=0;i<firstDay;i++) html += `<div class="cal-day empty"></div>`;
+    let html = days.map(d=>`<div class="cal-head">${d}</div>`).join("");
+    for(let i=0;i<firstDay;i++) html+=`<div class="cal-day empty"></div>`;
 
-    for (let d=1;d<=daysInMonth;d++) {
-      const dateStr  = `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-      const date     = new Date(y, m-1, d);
-      const dayOfWeek = date.getDay();
-      const isToday   = date.toDateString() === today.toDateString();
-      const isFuture  = date > today;
-      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-      const hadir     = data[dateStr] && data[dateStr][selUid];
-
-      let cls = isToday ? "today" : isFuture ? "future" : hadir ? "hadir" : "normal";
-      if (isWeekend && !isToday) cls += " weekend";
-
-      html += `<div class="cal-day ${cls}" title="${dateStr}${hadir ? " · Jam "+data[dateStr][selUid].jam : ""}">${d}</div>`;
+    for(let d=1;d<=daysInMonth;d++){
+      const dateStr = `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+      const date    = new Date(y,m-1,d);
+      const dow     = date.getDay();
+      const isToday = date.toDateString()===today.toDateString();
+      const isFuture= date>today;
+      const isWeek  = dow===0||dow===6;
+      const hadir   = data[dateStr]&&data[dateStr][selUid];
+      let cls = isToday?"today":isFuture?"future":hadir?"hadir":"";
+      if(isWeek&&!isToday) cls+=" weekend";
+      html+=`<div class="cal-day ${cls}" title="${dateStr}${hadir?" · Jam "+data[dateStr][selUid].jam:""}">${d}</div>`;
     }
-
-    document.getElementById("calendar-wrap").innerHTML = `<div class="calendar-grid">${html}</div>`;
+    document.getElementById("calendar-wrap").innerHTML = `<div class="cal-grid">${html}</div>`;
   });
 }
 loadCalendar();
 
-// Rekap semua user
-function loadRekapAll() {
-  loadAbsensiAll(data => {
-    const userCount = {};
-    ALL_USERS.forEach(u => userCount[u.uid] = 0);
-    Object.values(data).forEach(dayData => {
-      ALL_USERS.forEach(u => { if (dayData[u.uid]) userCount[u.uid]++; });
-    });
-    const totalHariKerja = 108;
-    document.getElementById("rekap-absensi").innerHTML = ALL_USERS.map(u => {
-      const count = userCount[u.uid];
-      const pct   = Math.min(Math.round(count/totalHariKerja*100), 100);
-      return `
-      <div style="margin-bottom:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div class="avatar" style="background:${u.color};width:28px;height:28px;font-size:11px;">${u.name[0]}</div>
-            <span style="font-size:13px;color:var(--text);">${u.name}</span>
-          </div>
-          <span style="font-size:12px;color:#00897b;font-weight:600;">${count} hari (${pct}%)</span>
-        </div>
-        <div class="summary-bar"><div class="summary-bar-fill" style="width:${pct}%;"></div></div>
-      </div>`;
-    }).join("");
-  });
-}
-loadRekapAll();
+// Rekap total
+loadAbsensiAll(data => {
+  const cnt = {}; ALL_USERS.forEach(u=>cnt[u.uid]=0);
+  Object.values(data).forEach(day => ALL_USERS.forEach(u=>{ if(day[u.uid]) cnt[u.uid]++; }));
+  document.getElementById("rekap-absensi").innerHTML = ALL_USERS.map(u=>{
+    const pct = Math.min(Math.round(cnt[u.uid]/108*100),100);
+    return `<div style="margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;">
+        <div style="width:28px;height:28px;border-radius:8px;background:${u.color};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px;">${u.name[0]}</div>
+        <span style="font-size:13px;font-weight:600;">${u.name}</span>
+        <span style="margin-left:auto;font-size:12px;font-weight:700;color:var(--green);">${cnt[u.uid]} hari (${pct}%)</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${u.color};"></div></div>
+    </div>`;
+  }).join("");
+});
 </script>
 </body>
 </html>

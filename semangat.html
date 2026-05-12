@@ -2,129 +2,138 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dinding Semangat — PKL Journal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Semangat — PKL Journal</title>
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    .afirmasi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:20px;}
-    .afirmasi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;text-align:center;transition:all .3s;cursor:default;}
-    .afirmasi-card:hover{border-color:var(--blood);transform:translateY(-2px);box-shadow:0 8px 24px rgba(204,0,0,.1);}
-    .afirmasi-icon{font-size:30px;margin-bottom:10px;animation:float 3s ease-in-out infinite;}
-    .afirmasi-card:nth-child(2) .afirmasi-icon{animation-delay:.5s;}
-    .afirmasi-card:nth-child(3) .afirmasi-icon{animation-delay:1s;}
-    .afirmasi-card:nth-child(4) .afirmasi-icon{animation-delay:1.5s;}
-    .afirmasi-text{font-family:var(--font-horror);font-size:15px;color:var(--text);line-height:1.5;}
-    .afirmasi-sub{font-size:10px;color:var(--text-3);margin-top:6px;}
-
-    .user-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px;}
-    .user-hero-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;text-align:center;transition:all .3s;}
-    .user-hero-card:hover{border-color:var(--blood);}
-    .user-hero-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:800;font-size:20px;color:#fff;margin:0 auto 12px;border:3px solid var(--blood);animation:pulse-red 3s infinite;}
-    .user-hero-name{font-family:var(--font-horror);font-size:20px;color:var(--red2);margin-bottom:4px;}
-    .user-hero-stat{font-size:11px;color:var(--text-3);}
-    .user-hero-count{font-family:var(--font-horror);font-size:32px;color:var(--amber);line-height:1;}
-
-    .checklist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;}
-    .checklist-title{font-family:var(--font-horror);font-size:20px;color:var(--red2);margin-bottom:16px;}
-    .checklist-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text-2);}
-    .checklist-item:last-child{border-bottom:none;}
-    .checklist-item .ck-icon{font-size:18px;flex-shrink:0;}
-    .checklist-item .ck-done{color:var(--green);}
-    .checklist-item .ck-pending{color:var(--text-3);}
-
-    .spin-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;text-align:center;margin-bottom:20px;}
-    .spin-btn h3{font-family:var(--font-horror);font-size:20px;color:var(--red2);margin-bottom:8px;}
-    .spin-btn p{color:var(--text-3);font-size:11px;margin-bottom:16px;}
-    .spin-result{font-family:var(--font-horror);font-size:18px;color:var(--text);line-height:1.5;min-height:60px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
-  </style>
 </head>
 <body>
-<div class="drip-container" id="drips"></div>
-<div class="page-wrapper">
+<div class="app">
   <div id="sidebar-mount"></div>
   <main class="main">
 
-    <div class="page-header">
-      <h1>✨ Dinding Semangat</h1>
-      <div class="sub">Karena PKL butuh lebih dari sekedar keahlian — butuh semangat!</div>
+    <div class="page-head">
+      <h1>✨ Dinding <span class="accent">Semangat</span></h1>
+      <div class="ph-sub">Karena PKL butuh lebih dari sekadar keahlian</div>
     </div>
 
     <!-- HERO MOTIVASI -->
-    <div class="semangat-hero" style="margin-bottom:20px;">
-      <h2 id="hero-motivasi">Loading...</h2>
-      <p style="color:var(--text-3);font-size:11px;margin-top:8px;">Klik untuk motivasi baru ↓</p>
+    <div class="hero-motivasi" style="margin-bottom:14px;" onclick="refreshMotivasi()">
+      <div class="hm-label">💡 MOTIVASI HARI INI</div>
+      <div class="hm-text" id="hero-motivasi">—</div>
+      <div class="hm-hint">Tap untuk motivasi baru</div>
     </div>
 
     <!-- COUNTDOWN SELESAI PKL -->
-    <div class="countdown-finish" style="margin-bottom:20px;">
-      <div class="icon">🏁</div>
-      <div class="info">
-        <h3>Selesai PKL dalam</h3>
-        <p>25 September 2026 · Sentra Computer</p>
+    <div class="finish-countdown" style="margin-bottom:14px;">
+      <div class="fc-icon">🏁</div>
+      <div>
+        <div class="fc-label">Selesai PKL dalam</div>
+        <div class="fc-sub">25 September 2026 · Sentra Computer</div>
       </div>
       <div style="text-align:center;margin-left:auto;">
-        <div class="days-left" id="days-finish">—</div>
-        <div class="days-label">hari lagi</div>
+        <div class="fc-days" id="days-finish">—</div>
+        <div class="fc-daylbl">hari lagi</div>
       </div>
     </div>
 
-    <!-- MILESTONE PROGRESS -->
-    <div class="card" style="margin-bottom:20px;">
-      <div class="card-title"><span class="dot"></span> Milestone PKL</div>
+    <!-- HARI TERBERAT VOTING -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">📊</span> Hari Ini Gimana?</div>
+      <div id="hari-vote-wrap">
+        <div class="hari-vote-wrap">
+          <button class="vote-btn santai" id="btn-santai" onclick="voteHari('santai')">
+            <div class="vb-emoji">😌</div>
+            <div class="vb-label">Santai</div>
+            <div class="vb-count" id="count-santai">0 vote</div>
+          </button>
+          <button class="vote-btn berat" id="btn-berat" onclick="voteHari('berat')">
+            <div class="vb-emoji">😫</div>
+            <div class="vb-label">Berat</div>
+            <div class="vb-count" id="count-berat">0 vote</div>
+          </button>
+        </div>
+        <div id="vote-result" style="margin-top:12px;display:none;">
+          <div style="font-size:12px;color:var(--text-3);margin-bottom:6px;">Grafik minggu ini:</div>
+          <div id="vote-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MILESTONE -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">🎯</span> Milestone PKL</div>
       <div class="milestone-grid" id="milestone-grid"></div>
     </div>
 
     <!-- USER HERO CARDS -->
-    <div class="card" style="margin-bottom:20px;">
-      <div class="card-title"><span class="dot"></span> Pahlawan PKL</div>
-      <div class="user-cards" id="user-cards"></div>
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">🏆</span> Pahlawan PKL</div>
+      <div class="grid-3" id="user-cards"></div>
     </div>
 
-    <!-- AFIRMASI CARDS -->
-    <div class="card" style="margin-bottom:20px;">
-      <div class="card-title"><span class="dot" style="background:var(--amber);box-shadow:0 0 6px var(--amber);"></span> Afirmasi Harian</div>
-      <div class="afirmasi-grid">
-        <div class="afirmasi-card">
-          <div class="afirmasi-icon">💪</div>
-          <div class="afirmasi-text">Aku mampu menyelesaikan PKL ini dengan baik</div>
-          <div class="afirmasi-sub">Repeat 3x setiap pagi</div>
-        </div>
-        <div class="afirmasi-card">
-          <div class="afirmasi-icon">🧠</div>
-          <div class="afirmasi-text">Setiap hari aku belajar sesuatu yang baru</div>
-          <div class="afirmasi-sub">Percaya pada prosesnya</div>
-        </div>
-        <div class="afirmasi-card">
-          <div class="afirmasi-icon">🔥</div>
-          <div class="afirmasi-text">Kesulitan hari ini adalah kekuatan masa depanku</div>
-          <div class="afirmasi-sub">Stay strong!</div>
-        </div>
-        <div class="afirmasi-card">
-          <div class="afirmasi-icon">⭐</div>
-          <div class="afirmasi-text">Aku layak ada di Sentra Computer</div>
-          <div class="afirmasi-sub">Kamu dipilih karena kamu bisa</div>
-        </div>
+    <!-- MOOD TIMELINE -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head">
+        <div class="card-title"><span class="ct-icon">😊</span> Mood History</div>
+        <select class="filter-select" id="mood-user-filter" onchange="loadMoodTimeline()">
+          <option value="Shandy">Shandy</option>
+          <option value="Sabrina">Sabrina</option>
+          <option value="Fahri">Fahri</option>
+        </select>
+      </div>
+      <div class="mood-timeline" id="mood-timeline">
+        <div style="font-size:12px;color:var(--text-3);">Memuat...</div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--text-3);">
+        <span>🔥 Produktif</span><span>⚡ Seru</span><span>🧠 Belajar</span><span>😐 Biasa</span><span>😴 Lelah</span>
       </div>
     </div>
 
-    <!-- SPIN MOTIVASI -->
-    <div class="spin-btn">
-      <h3>🎲 Motivasi Acak</h3>
-      <p>Butuh dorongan? Klik tombol di bawah!</p>
-      <div class="spin-result" id="spin-result">Klik tombol untuk mendapat motivasi...</div>
-      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="spinMotivasi()">🎲 Putar Motivasi!</button>
+    <!-- SURAT UNTUK DIRI SENDIRI -->
+    <div class="letter-card" style="margin-bottom:14px;">
+      <div class="letter-title">✉️ Surat untuk Diri Sendiri</div>
+      <div class="letter-sub">Tulis surat sekarang, dibuka otomatis 25 September 2026 jam 23:59</div>
+      <div id="letter-content">
+        <div class="form-group">
+          <textarea id="letter-text" rows="5" placeholder="Hei diriku di masa depan... tulis apa yang ingin kamu sampaikan ke dirimu saat PKL selesai nanti."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="saveLetter()">💌 Simpan Surat</button>
+      </div>
+      <div id="letter-saved" style="display:none;">
+        <div style="background:rgba(255,255,255,.6);border-radius:var(--r);padding:12px;font-size:13px;color:#92400e;font-style:italic;line-height:1.6;" id="letter-preview"></div>
+        <div style="font-size:11px;color:#a16207;margin-top:8px;">🔒 Surat tersimpan. Akan terbuka saat PKL selesai.</div>
+        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="editLetter()">Edit Surat</button>
+      </div>
     </div>
 
-    <!-- TIPS PKL -->
-    <div class="card" style="margin-bottom:20px;">
-      <div class="card-title"><span class="dot" style="background:var(--cyan);box-shadow:0 0 6px var(--cyan);"></span> Tips Sukses PKL</div>
-      <div class="checklist-item"><span class="ck-icon">⚡</span><span>Isi jurnal setiap hari, jangan numpuk di akhir minggu</span></div>
-      <div class="checklist-item"><span class="ck-icon">🤝</span><span>Aktif bertanya ke pembimbing lapangan — itu kesempatan emas</span></div>
-      <div class="checklist-item"><span class="ck-icon">📸</span><span>Dokumentasikan setiap pekerjaan — foto, screenshot, catat</span></div>
-      <div class="checklist-item"><span class="ck-icon">🕐</span><span>Datang tepat waktu, pulang sesuai jadwal — konsistensi itu penting</span></div>
-      <div class="checklist-item"><span class="ck-icon">💡</span><span>Inisiatif melakukan tugas tanpa diminta — nilai plus di mata pembimbing</span></div>
-      <div class="checklist-item"><span class="ck-icon">🔧</span><span>Praktekkan skill networking/OS yang sudah dipelajari di sekolah</span></div>
-      <div class="checklist-item"><span class="ck-icon">😊</span><span>Jaga attitude — profesional, sopan, dan semangat setiap hari</span></div>
+    <!-- AFIRMASI -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">💪</span> Afirmasi Harian</div>
+      <div class="afirmasi-grid">
+        <div class="afirmasi-card"><div class="af-icon">💪</div><div class="af-text">Aku mampu menyelesaikan PKL ini dengan baik</div><div class="af-sub">Ulangi 3x setiap pagi</div></div>
+        <div class="afirmasi-card"><div class="af-icon">🧠</div><div class="af-text">Setiap hari aku belajar sesuatu yang baru</div><div class="af-sub">Percaya prosesnya</div></div>
+        <div class="afirmasi-card"><div class="af-icon">🔥</div><div class="af-text">Kesulitan hari ini adalah kekuatan masa depanku</div><div class="af-sub">Stay strong!</div></div>
+        <div class="afirmasi-card"><div class="af-icon">⭐</div><div class="af-text">Aku layak ada di Sentra Computer</div><div class="af-sub">Kamu dipilih karena kamu bisa</div></div>
+      </div>
+    </div>
+
+    <!-- TIPS -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:12px;"><span class="ct-icon">💡</span> Tips Sukses PKL</div>
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);"><span style="font-size:18px;">⚡</span><span style="font-size:13px;color:var(--text-2);">Isi jurnal setiap hari — jangan numpuk di akhir minggu</span></div>
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);"><span style="font-size:18px;">🤝</span><span style="font-size:13px;color:var(--text-2);">Aktif bertanya ke pembimbing lapangan — itu kesempatan emas</span></div>
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);"><span style="font-size:18px;">📸</span><span style="font-size:13px;color:var(--text-2);">Dokumentasikan setiap pekerjaan — foto, screenshot, catat</span></div>
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);"><span style="font-size:18px;">🕐</span><span style="font-size:13px;color:var(--text-2);">Datang tepat waktu — konsistensi itu dinilai</span></div>
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);"><span style="font-size:18px;">💡</span><span style="font-size:13px;color:var(--text-2);">Inisiatif melakukan tugas tanpa diminta — nilai plus!</span></div>
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;"><span style="font-size:18px;">😊</span><span style="font-size:13px;color:var(--text-2);">Jaga attitude — profesional, sopan, dan semangat setiap hari</span></div>
+      </div>
+    </div>
+
+    <!-- QUOTE -->
+    <div class="quote-card">
+      <div class="quote-text" id="quote-text">—</div>
+      <div class="quote-author" id="quote-author"></div>
     </div>
 
   </main>
@@ -136,39 +145,64 @@
 <script src="js/firebase.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/journal.js"></script>
-<script src="js/streak.js"></script>
-<script src="js/absensi.js"></script>
 <script src="js/nav.js"></script>
+<script src="js/telegram.js"></script>
+<script src="js/autodown.js"></script>
 <script>
-(function(){const c=document.getElementById("drips");for(let i=0;i<6;i++){const d=document.createElement("div");d.className="drip";d.style.cssText=`left:${Math.random()*100}%;animation-delay:${Math.random()*6}s;animation-duration:${2+Math.random()*4}s;height:${15+Math.random()*40}px;opacity:${0.15+Math.random()*0.3}`;c.appendChild(d);}})();
-
 const user = requireSession();
+if (user.isGuest) window.location.href = "jurnal.html";
 initPage("semangat");
 
 // Hero motivasi
 const heroEl = document.getElementById("hero-motivasi");
 heroEl.textContent = getRandomMotivasi();
-heroEl.style.cursor = "pointer";
-heroEl.onclick = () => { heroEl.textContent = getRandomMotivasi(); };
+function refreshMotivasi() { heroEl.style.animation="none"; void heroEl.offsetWidth; heroEl.style.animation=""; heroEl.textContent = getRandomMotivasi(); }
 
-// Countdown selesai PKL
+// Countdown
 function updateCountdown() {
-  const finish = new Date("2026-09-25T17:00:00+07:00");
-  const now    = new Date();
-  const diff   = finish - now;
-  if (diff <= 0) { document.getElementById("days-finish").textContent = "0"; return; }
-  document.getElementById("days-finish").textContent = Math.ceil(diff / 86400000);
+  const finish = new Date("2026-09-25T23:59:59+07:00");
+  const diff   = finish - new Date();
+  document.getElementById("days-finish").textContent = diff > 0 ? Math.ceil(diff/86400000) : "0";
 }
-updateCountdown();
-setInterval(updateCountdown, 60000);
+updateCountdown(); setInterval(updateCountdown, 60000);
+
+// Hari terberat voting
+const todayStr = new Date().toISOString().slice(0,10);
+const voteRef  = db.ref(`hari_terberat/${todayStr}`);
+
+voteRef.on("value", snap => {
+  const d = snap.val()||{};
+  const santai = d.santai||0, berat = d.berat||0;
+  document.getElementById("count-santai").textContent = santai+" vote";
+  document.getElementById("count-berat").textContent  = berat+" vote";
+  // Check if already voted
+  const myVote = localStorage.getItem(`pkl_vote_${todayStr}`);
+  if (myVote) {
+    document.getElementById("btn-santai").classList.toggle("voted", myVote==="santai");
+    document.getElementById("btn-berat").classList.toggle("voted",  myVote==="berat");
+  }
+});
+
+async function voteHari(type) {
+  const myVote = localStorage.getItem(`pkl_vote_${todayStr}`);
+  if (myVote) { showToast("Sudah vote hari ini!", "info"); return; }
+  await voteRef.transaction(cur => {
+    if (!cur) cur = { santai:0, berat:0 };
+    cur[type] = (cur[type]||0)+1;
+    return cur;
+  });
+  localStorage.setItem(`pkl_vote_${todayStr}`, type);
+  document.getElementById(`btn-${type}`).classList.add("voted");
+  showToast(type==="santai" ? "😌 Syukurlah santai!" : "😫 Semangat, pasti bisa!", "success");
+}
 
 // Milestones
 const PKL_START = new Date("2026-05-04T10:00:00+07:00");
 const milestones = [
-  { label:"Minggu pertama", date:"2026-05-11", icon:"🌱" },
+  { label:"Minggu Pertama", date:"2026-05-11", icon:"🌱" },
   { label:"1 Bulan PKL",    date:"2026-06-04", icon:"📅" },
-  { label:"Setengah Jalan", date:"2026-07-16", icon:"⚡" },
   { label:"2 Bulan PKL",    date:"2026-07-04", icon:"🔥" },
+  { label:"Setengah Jalan", date:"2026-07-15", icon:"⚡" },
   { label:"3 Bulan PKL",    date:"2026-08-04", icon:"💪" },
   { label:"Akhir PKL",      date:"2026-09-25", icon:"🏁" },
 ];
@@ -176,49 +210,79 @@ const now = new Date();
 document.getElementById("milestone-grid").innerHTML = milestones.map(m => {
   const mDate = new Date(m.date);
   const done  = now >= mDate;
-  const isCur = !done && (mDate - now) < 7*86400000;
-  return `<div class="milestone ${done?"done":isCur?"current":""}">
-    <div class="milestone-icon">${m.icon}</div>
-    <div class="milestone-label">${done?"✅ ":isCur?"⚡ ":""}${m.label}</div>
-    <div class="milestone-date">${m.date}</div>
+  const cur   = !done && (mDate-now) < 7*86400000;
+  return `<div class="milestone ${done?"done":cur?"current":""}">
+    <div class="ms-icon">${m.icon}</div>
+    <div class="ms-label">${done?"✅ ":cur?"⚡ ":""}${m.label}</div>
+    <div class="ms-date">${m.date}</div>
   </div>`;
 }).join("");
 
 // User hero cards
 const USERS_INFO = [
-  { uid:"user_shandy",  name:"Shandy",  color:"#7a0000", avatar:"S" },
-  { uid:"user_sabrina", name:"Sabrina", color:"#4a0040", avatar:"Sa" },
-  { uid:"user_fahri",   name:"Fahri",   color:"#003a5a", avatar:"F" },
+  { uid:"user_shandy",  name:"Shandy",  color:"#dc2626" },
+  { uid:"user_sabrina", name:"Sabrina", color:"#b91c1c" },
+  { uid:"user_fahri",   name:"Fahri",   color:"#991b1b" },
 ];
-
 const cardsEl = document.getElementById("user-cards");
 USERS_INFO.forEach(u => {
-  journalRef(u.uid).once("value", snap => {
-    const total = snap.numChildren();
-    const days  = new Set();
-    snap.forEach(c => { if(c.val().tanggal) days.add(c.val().tanggal); });
-    const card = document.createElement("div");
-    card.className = "user-hero-card";
-    card.innerHTML = `
-      <div class="user-hero-avatar" style="background:${u.color};">${u.avatar}</div>
-      <div class="user-hero-name">${u.name}</div>
-      <div class="user-hero-count">${total}</div>
-      <div class="user-hero-stat">${days.size} hari · ${total} entri</div>`;
-    cardsEl.appendChild(card);
+  journalRef().once("value", snap => {
+    let total=0; const days=new Set();
+    snap.forEach(c => { const d=c.val(); if(d.uid===u.uid){ total++; if(d.tanggal) days.add(d.tanggal); } });
+    const div = document.createElement("div");
+    div.style.cssText = "background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;text-align:center;";
+    div.innerHTML = `
+      <div style="width:52px;height:52px;border-radius:50%;background:${u.color};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;margin:0 auto 10px;">${u.name[0]}</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);">${u.name}</div>
+      <div style="font-size:26px;font-weight:800;color:var(--red);margin:4px 0;">${total}</div>
+      <div style="font-size:11px;color:var(--text-3);">${days.size} hari · ${total} entri</div>`;
+    cardsEl.appendChild(div);
   });
 });
 
-// Spin motivasi
-function spinMotivasi() {
-  const el = document.getElementById("spin-result");
-  el.style.opacity = "0";
-  setTimeout(() => {
-    el.textContent = getRandomMotivasi();
-    el.style.opacity = "1";
-    el.style.transition = "opacity .3s";
-  }, 200);
+// Mood timeline
+function loadMoodTimeline() {
+  const userName = document.getElementById("mood-user-filter").value;
+  const MOOD_MAP = { produktif:"🔥", seru:"⚡", belajar:"🧠", biasa:"😐", lelah:"😴" };
+  const MOOD_BG  = { produktif:"rgba(220,38,38,.15)", seru:"rgba(220,38,38,.1)", belajar:"rgba(22,163,74,.1)", biasa:"rgba(107,114,128,.1)", lelah:"rgba(217,119,6,.1)" };
+  journalRef().orderByChild("createdAt").once("value", snap => {
+    const entries = [];
+    snap.forEach(c => { const d=c.val(); if(d.userName===userName && d.mood) entries.push(d); });
+    const el = document.getElementById("mood-timeline");
+    el.innerHTML = entries.slice(-30).map(e => `
+      <div class="mt-day" style="background:${MOOD_BG[e.mood]||"var(--bg2)"};" title="${e.tanggal||""}: ${e.mood||""}">${MOOD_MAP[e.mood]||"❓"}</div>
+    `).join("") || `<div style="font-size:12px;color:var(--text-3);">Belum ada data mood</div>`;
+  });
 }
+loadMoodTimeline();
+
+// Surat untuk diri sendiri
+const letterKey = `pkl_letter_${user.uid}`;
+function loadLetter() {
+  const saved = localStorage.getItem(letterKey);
+  if (saved) {
+    document.getElementById("letter-content").style.display = "none";
+    document.getElementById("letter-saved").style.display   = "block";
+    document.getElementById("letter-preview").textContent   = saved;
+  }
+}
+function saveLetter() {
+  const text = document.getElementById("letter-text").value.trim();
+  if (!text) { showToast("Tulis suratnya dulu!", "error"); return; }
+  localStorage.setItem(letterKey, text);
+  loadLetter();
+  showToast("Surat tersimpan! Akan terbuka 25 September 💌", "success");
+}
+function editLetter() {
+  document.getElementById("letter-text").value = localStorage.getItem(letterKey)||"";
+  document.getElementById("letter-content").style.display = "block";
+  document.getElementById("letter-saved").style.display   = "none";
+}
+loadLetter();
+
+const q = getRandomQuote();
+document.getElementById("quote-text").textContent  = `"${q.text}"`;
+document.getElementById("quote-author").textContent = q.author;
 </script>
-<script src="js/autodown.js"></script>
 </body>
 </html>
